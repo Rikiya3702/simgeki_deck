@@ -1,5 +1,6 @@
 import {
-  INPUT,
+  INPUT_BOSS_ENTER,
+  INPUT_BOSS_DONE
 } from '../actions'
 
 export const ATTACK = 'ATTACK'
@@ -26,7 +27,7 @@ const updateMessage = () =>{
   let mes = []
   mes.push('更新履歴')
   mes.push('')
-  mes.push('2020/04/12　公開')
+  mes.push('2020/05/03　開発着手')
   return mes
 }
 
@@ -76,11 +77,11 @@ const initialCard = {
   name: AKARI,
   attr: FIRE,
   skill: {
-    type: ATTACK,
-    boss: BOSS,
+    type: BOOST,
+    boss: null,
     fusion: false,
-    target:null,
-    value: 15,
+    target: ATK,
+    value: 20,
     skill2: {
       boss: null,
       value: null
@@ -117,19 +118,44 @@ const initialCardRight = Object.assign({}, initialCard,{
 })
 const initialState = {  mes: ['ようこそ'],
                         updated: updateMessage(),
-                        cards: {left : initialCardLeft,
-                                center: initialCard,
-                                right: initialCardRight,
-                              }
+                        cards: {  left : initialCardLeft,
+                                  center: initialCard,
+                                  right: initialCardRight,
+                                },
+                        bosstime: { enter: 50,
+                                    done: 60
+                                  }
                       }
 
+const validateEnter = v => {
+  if(v.enter >= 100){
+    return { enter: 100, done: 100 }
+  }else if(v.enter >= v.done){
+    return { enter: v.enter, done: v.enter }
+  }else{
+    return { enter: v.enter, done: v.done }
+  }
+}
+const validateDone = v => {
+  if(v.done <= 0){
+    return { enter: 0, done: 0 }
+  }else if(v.done <= v.enter){
+    return { enter: v.done, done: v.done }
+  }else{
+    return { enter: v.enter, done: v.done }
+  }
+}
 export default (state = initialState, action) => {
 
   switch(action.type){
-    case INPUT:
+    case INPUT_BOSS_ENTER:
       return Object.assign({}, state,{
-        exp: { goal: state.exp.goal },
-        lv:  { goal: state.lv.goal },
+        bosstime: validateEnter({ enter: action.value, done: state.bosstime.done }),
+      })
+
+    case INPUT_BOSS_DONE:
+      return Object.assign({}, state,{
+        bosstime: validateDone({ done: action.value, enter: state.bosstime.enter }),
       })
 
     default:
