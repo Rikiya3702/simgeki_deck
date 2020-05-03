@@ -17,6 +17,10 @@ import {
   BOSS,
   SENSEI,
   TUIGEKI,
+  ATK,
+  ATR,
+  ATC,
+  CHA,
   AKARI,
   AOI,
   YUZU
@@ -36,16 +40,17 @@ class App extends Component {
   this.setState( {card_temp_select: e.target.value} )
   }
 
-render(){
-  const props = this.props
-  const card_options = card_templete.map(
-    (t, index)=>(
-      <option key={ index } value={ index }>
-        {t.label}
-      </option>
-    )
-  );
-  return (
+  render(){
+    const props = this.props
+    const card_options = card_templete.map(
+      (t, index)=>(
+        <option key={ index } value={ index }>
+          {t.label}
+        </option>
+      )
+    );
+    return (
+
 <React.Fragment>
   <div id="App">
     <header>
@@ -64,15 +69,16 @@ render(){
     </header>
   </div>
 </React.Fragment>
-  )
-}}
+
+  )}
+}
+
 const Card = props => {
   return(
     <React.Fragment>
       <hr />
       <table>
         <thead>
-          {console.log(props.card)}
           <tr><th colSpan="2">カードでーた【{props.card.name}】({props.card.attr})</th></tr>
         </thead>
         <tbody>
@@ -93,6 +99,7 @@ const Card = props => {
     </React.Fragment>
   )
 }
+
 const setumei = props => {
   let mes = ''
   switch(props.boss){
@@ -108,12 +115,31 @@ const setumei = props => {
     default:
       break
   }
+  switch(props.target){
+    case ATK:
+      mes += '[ATTACK]の'
+      break
+    case ATR:
+      mes += '[ATTACK]かつ[同属性]の'
+      break
+    case ATC:
+      mes += '[ATTACK]かつ[同キャラ]の'
+      break
+    case CHA:
+      mes += '[同キャラ]の'
+      break
+    default:
+      break
+  }
   if(props.fusion){
     mes += '同じキャラのカード1枚につき'
   }
   switch(props.type){
     case ATTACK:
       mes += `自身の攻撃力${props.value}%アップ`
+      break
+    case BOOST:
+      mes += `攻撃力${props.value}%アップ`
       break
     default:
       break
@@ -132,16 +158,15 @@ const setumei = props => {
   }
   return mes
 }
+
 const validate = values => {
   const errors = {}
   return errors
 }
-
 const mapStateToProps = state => ({
   cards: state.input.cards,
   lv: state.input.lv,
  })
-
 const mapDispatchToProps = ({
   input
 })

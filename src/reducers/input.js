@@ -9,6 +9,11 @@ export const BOSS = 'BOSS'
 export const SENSEI = 'SENSEI'
 export const TUIGEKI = 'TUIGEKI'
 
+export const ATK = 'ATK'
+export const ATR = 'ATR'
+export const ATC = 'ATC'
+export const CHA = 'CHA'
+
 export const FIRE = 'FIRE'
 export const LEAF = 'LEAF'
 export const AQUA = 'AQUA'
@@ -26,44 +31,45 @@ const updateMessage = () =>{
 }
 
  /*
- ＾＾＾アタック＾＾＾
- タイミング（ノーマル・先制・ボス・追撃、フュー・先制フュー・ボスフュー・追撃フュー）
-X
- 追加スキル（なし・全部・先制・ボス・追撃）
-＾＾＾＾＾＾
+------------アタック------------
+・タイミング（ノーマル・先制・ボス・追撃、フュー・先制フュー・ボスフュー・追撃フュー）
+・追加スキル（なし・全部・先制・ボス・追撃）
 
-＾＾＾ブースト＾＾＾
+  type: ATTACK,
+  boss: null BOSS SENSEI TUIGEKI,
+  fusion: true false,
+  target: null,
+  value: 15,
+  skill2: {
+    boss: BOSS SENSEI TUIGEKI,
+    value: null
+  }
+------------------------------------------------
 
-ATACCKかつ属性の攻撃力％アップ（全部・ボス）
-ATACCKかつキャラの攻撃力％アップ（全部・ボス）
-キャラの攻撃力％アップ（全部・ボス）
-全ての攻撃力％アップ（全部・ボス）
-＾＾＾＾＾＾
+------------ブースト------------
 
- フュージョン（なし・全部・先制・後半・撃破後）
-自身の攻撃力％アップ
-自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-自身の攻撃力％アップ
-バトル後半で、自身の攻撃力％アップ
-バトル前半で、自身の攻撃力％アップ
-ボス撃破後、自身の攻撃力％アップ
-のカード一枚につき自身の攻撃力％アップ
-のカード一枚につき自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-のカード一枚につき自身の攻撃力％アップ（自身の攻撃力％アップ）
-のカード一枚につき自身の攻撃力％アップ
+( null or ATK ) and (null or ATTR or CHAR )
 
-自身の攻撃力％アップ
-バトル後半で、自身の攻撃力％アップ
-バトル前半で、自身の攻撃力％アップ
-ボス撃破後、自身の攻撃力％アップ
-のカード一枚につき自身の攻撃力％アップ
+ATACCKの攻撃力％アップ（全部・ボス・先制・追撃）
+→ATK
+ATACCKかつ属性の攻撃力％アップ（全部・ボス・先制・追撃）
+→ATR
+ATACCKかつキャラの攻撃力％アップ（全部・ボス・先制・追撃）
+→ATC
+キャラの攻撃力％アップ（全部・ボス・先制・追撃）
+→CHA
 
-自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-バトル後半で、自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-バトル前半で、自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-ボス撃破後、自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-のカード一枚につき自身の攻撃力％アップ（バトル後半で、自身の攻撃力％アップ）
-
+  type: BOOST,
+    boss: null BOSS SENSEI TUIGEKI,
+    fusion: true false, （キャラブースト）
+    target: ATK ATR ATC CHA
+    value: 15,
+  （↓使わない↓）
+    skill2: {
+      boss: null,
+      value: null
+    }
+------------------------------------------------
  */
 const initialCard = {
   atk: 317,
@@ -73,6 +79,7 @@ const initialCard = {
     type: ATTACK,
     boss: BOSS,
     fusion: false,
+    target:null,
     value: 15,
     skill2: {
       boss: null,
@@ -86,6 +93,7 @@ const initialCardLeft = Object.assign({}, initialCard,{
     type: ATTACK,
     boss: TUIGEKI,
     fusion: false,
+    target:null,
     value: 20,
     skill2: {
       boss: null,
@@ -99,6 +107,7 @@ const initialCardRight = Object.assign({}, initialCard,{
     type: ATTACK,
     boss: null,
     fusion: true,
+    target:null,
     value: 5,
     skill2: {
       boss: SENSEI,
