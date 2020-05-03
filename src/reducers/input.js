@@ -78,7 +78,7 @@ const initialCard = {
   attr: FIRE,
   skill: {
     type: BOOST,
-    boss: null,
+    boss: BOSS,
     fusion: false,
     target: ATK,
     value: 20,

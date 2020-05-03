@@ -119,6 +119,14 @@ class App extends Component {
             <td>最大ATK</td>
             <td>{getAtk('right',props.cards)}</td>
           </tr>
+          <tr>
+            <td>ATK期待値</td>
+            <td>{ getAtk2('left', props.cards, props.bosstime) }</td>
+            <td>ATK期待値</td>
+            <td>{ getAtk2('center', props.cards, props.bosstime) }</td>
+            <td>ATK期待値</td>
+            <td>{ getAtk2('right', props.cards, props.bosstime) }</td>
+          </tr>
         </tbody>
       </table>
       <span>ボス出現</span>
@@ -262,6 +270,16 @@ const getAtk = (self, cards) => {
     if(cards[self].skill.target === CHA) {
       boost += cards[self].skill.value
     }
+    //selfもalfaもCHAの場合
+    if( cards[alfa].skill.target === CHA &&
+        cards[self].name === cards[alfa].name) {
+      boost += cards[alfa].skill.value
+    }
+    //selfもbetaもCHAの場合
+    if( cards[self].skill.target === CHA &&
+        cards[self].name === cards[beta].name) {
+      boost += cards[beta].skill.value
+    }
       return cards[self].atk * (100 + boost ) /100
   }else {
     //自身がATTACKかつalfaがBOOST
@@ -315,6 +333,110 @@ const getAtk = (self, cards) => {
 
 }
 
+const getAtk2 = (self, cards, bosstime) => {
+  let alfa = ''
+  let beta = ''
+  switch(self) {
+    case 'left':
+      alfa = 'center'
+      beta = 'right'
+      break
+    case 'center':
+      alfa = 'left'
+      beta = 'right'
+      break
+    case 'right':
+      alfa = 'center'
+      beta = 'left'
+      break
+    default:
+      break
+  }
+
+  let boss_attack = 100
+
+  let self_boost = 0
+  let alfa_boost = 0
+  let beta_boost = 0
+
+  if(cards[self].skill.type === BOOST) {
+    // CHAの時のみ自身にもブーストがかかる
+    // BOOSTなのでfusionは無視
+    if(cards[self].skill.target === CHA) {
+      self_boost = cards[self].skill.value * correctionBosstime(cards[self].skill.boss, bosstime) /100
+    }
+    //selfもalfaもCHAの場合
+    if( cards[alfa].skill.target === CHA &&
+        cards[self].name === cards[alfa].name) {
+      alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+    }
+    //selfもbetaもCHAの場合
+    if( cards[self].skill.target === CHA &&
+        cards[self].name === cards[beta].name) {
+      beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+    }
+      return cards[self].atk * (100 + self_boost + alfa_boost + beta_boost ) /100
+  }else {
+
+    boss_attack = correctionBosstime(cards[self].skill.boss, bosstime)
+
+    //自身がATTACKかつalfaがBOOST
+    if(cards[alfa].skill.type === BOOST) {
+      switch(cards[alfa].skill.target) {
+        case ATK:
+          alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+          break
+        case ATR && cards[self].attr === cards[alfa].attr:
+          alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+          break
+        case ATC && cards[self].name === cards[alfa].name:
+          alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+          break
+        default:
+          break
+      }
+    }
+    //自身がATTACKかつbetaがBOOST
+    if(cards[beta].skill.type === BOOST) {
+      switch(cards[beta].skill.target) {
+        case ATK:
+          beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+          break
+        case ATR && cards[self].attr === cards[beta].attr:
+          beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+          break
+        case ATC && cards[self].name === cards[beta].name:
+          beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+          break
+        default:
+          break
+      }
+    }
+  }
+
+  let fusion = 1
+  if(cards[self].skill.fusion) {
+    if(cards[self].name === cards[alfa].name) fusion += 1
+    if(cards[self].name === cards[beta].name) fusion += 1
+  }
+  return cards[self].atk * (100 + cards[self].skill.value *fusion *boss_attack/100 + alfa_boost + beta_boost ) /100
+
+}
+
+const correctionBosstime = (boss, bosstime) => {
+  switch(boss) {
+    case BOSS:
+      return 100 - bosstime.enter
+    case SENSEI:
+      return  bosstime.done
+      break
+    case TUIGEKI:
+      return 100 - bosstime.done
+      break
+    default:
+      return 100
+  }
+}
 
 const validate = values => {
   const errors = {}
