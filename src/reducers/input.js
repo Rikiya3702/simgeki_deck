@@ -1,4 +1,7 @@
 import {
+  SELECT_CARD_NAME,
+  SELECT_CARD_ATK,
+  SELECT_CARD_SKILL,
   INPUT_BOSS_ENTER,
   INPUT_BOSS_DONE
 } from '../actions'
@@ -80,7 +83,7 @@ const initialCard = {
     type: BOOST,
     boss: BOSS,
     fusion: false,
-    target: ATK,
+    target: ATR,
     value: 20,
     skill2: {
       boss: null,
@@ -90,9 +93,10 @@ const initialCard = {
 }
 const initialCardLeft = Object.assign({}, initialCard,{
   name: AOI,
+  attr: AQUA,
   skill: {
     type: ATTACK,
-    boss: TUIGEKI,
+    boss: SENSEI,
     fusion: false,
     target:null,
     value: 20,
@@ -104,15 +108,16 @@ const initialCardLeft = Object.assign({}, initialCard,{
 })
 const initialCardRight = Object.assign({}, initialCard,{
   name: YUZU,
+  attr: LEAF,
   skill: {
     type: ATTACK,
     boss: null,
     fusion: true,
     target:null,
-    value: 5,
+    value: 6,
     skill2: {
-      boss: SENSEI,
-      value: 6
+      boss: BOSS,
+      value: 2
     }
   }
 })
@@ -136,6 +141,7 @@ const validateEnter = v => {
     return { enter: v.enter, done: v.done }
   }
 }
+
 const validateDone = v => {
   if(v.done <= 0){
     return { enter: 0, done: 0 }
@@ -145,9 +151,52 @@ const validateDone = v => {
     return { enter: v.enter, done: v.done }
   }
 }
+
+const getChar2Attr = char => {
+  switch(char) {
+    case AKARI:
+      return FIRE
+    case AOI:
+      return AQUA
+    case YUZU:
+      return LEAF
+  }
+}
 export default (state = initialState, action) => {
+  let new_card = {}
 
   switch(action.type){
+    case SELECT_CARD_NAME:
+    new_card = Object.assign({}, state.cards[action.position] ,{
+        name: action.value,
+        attr: getChar2Attr( action.value),
+    })
+      return Object.assign({}, state ,{
+          cards: Object.assign({}, state.cards, {
+            [action.position]: new_card
+          })
+      })
+    case SELECT_CARD_ATK:
+    new_card = Object.assign({}, state.cards[action.position] ,{
+        atk: action.value
+    })
+      return Object.assign({}, state ,{
+          cards: Object.assign({}, state.cards, {
+            [action.position]: new_card
+          })
+      })
+
+    case SELECT_CARD_SKILL:
+    new_card = Object.assign({}, state.cards[action.position] ,{
+        skill: action.value
+    })
+    console.log(new_card)
+      return Object.assign({}, state ,{
+          cards: Object.assign({}, state.cards, {
+            [action.position]: new_card
+          })
+      })
+
     case INPUT_BOSS_ENTER:
       return Object.assign({}, state,{
         bosstime: validateEnter({ enter: action.value, done: state.bosstime.done }),
