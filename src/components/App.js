@@ -8,26 +8,33 @@ import {
   card_atk,
   card_name,
   card_skill,
-  input_boss_enter,
-  input_boss_done
+  card_skill_type,
+  card_skill_boss,
+  card_skill_fusion,
+  card_skill_target,
+  card_skill_value,
+  card_skill2_value,
+  boss_enter,
+  boss_done
 } from '../actions'
 
 import {
   ATTACK,
   BOOST,
+  NORMAL,
   BOSS,
   SENSEI,
   TUIGEKI,
+  NONE,
   ATK,
   ATR,
   ATC,
-  CHA,
-  AKARI,
-  AOI,
-  YUZU
+  CHA
 } from '../reducers/input.js'
 import card_templete from '../data/index.js'
-import skill_templete from '../data/skills.js'
+import attack_skill_templete from '../data/skill_attacks.js'
+import boost_skill_templete from '../data/skill_boosts.js'
+import select_chars from '../data/select_chars.js'
 
 class App extends Component {
 
@@ -35,16 +42,21 @@ class App extends Component {
     super(props)
     this.state = {
       card_temp_select: 1,
-      skill_temp_select: 1
+      select_skill_attack: 1,
+      select_skill_boost: 1
     }
     this.onSelect = this.onSelect.bind(this);
-    this.onSelectSkill = this.onSelectSkill.bind(this);
+    this.onSelectSkillAttack = this.onSelectSkillAttack.bind(this);
+    this.onSelectSkillBoost = this.onSelectSkillBoost.bind(this);
   }
   onSelect = (e) => {
   this.setState( {card_temp_select: e.target.value} )
   }
-  onSelectSkill = (e) => {
-  this.setState( {skill_temp_select: e.target.value} )
+  onSelectSkillAttack = (e) => {
+  this.setState( {select_skill_attack: e.target.value} )
+  }
+  onSelectSkillBoost = (e) => {
+  this.setState( {select_skill_boost: e.target.value} )
   }
 
   render(){
@@ -61,13 +73,29 @@ class App extends Component {
         </option>
       )
     );
-    const skill_options = skill_templete.map(
+    const attack_skill_options = attack_skill_templete.map(
       (t, index)=>(
         <option key={ index } value={ index }>
           {t.label}
         </option>
       )
     );
+    const boost_skill_options = boost_skill_templete.map(
+      (t, index)=>(
+        <option key={ index } value={ index }>
+          {t.label}
+        </option>
+      )
+    );
+    const options_character_name = select_chars.map(
+        (m, index)=>(
+          <option key={ index } value={ m.value }>
+            {m.label}
+          </option>
+        )
+      )
+
+
     return (
 
 <React.Fragment>
@@ -85,27 +113,64 @@ class App extends Component {
     <Card card={props.cards.left} position="left"/>
     <Card card={props.cards.center} />
     <Card card={props.cards.right} />
-    <select value={props.cards['left'].name} onChange={ (e) => props.card_name('left', e.target.value) }>
-      <option value={AKARI} >AKARI</option>
-      <option value={AOI} >AOI</option>
-      <option value={YUZU} >YUZU</option>
+
+    <br />
+    <select className="" value={this.state.select_skill_attack} onChange={ this.onSelectSkillAttack }>
+      { attack_skill_options }
     </select>
-    <select value={props.cards['center'].name} onChange={ (e) => props.card_atk('center', e.target.value) }>
-      <option value={111} >111</option>
-      <option value={222} >222</option>
-      <option value={333} >333</option>
+    <button onClick={ () => {props.card_skill('center', attack_skill_templete[this.state.select_skill_attack].data.skill)}} >centerをこれにする</button>
+
+    <br />
+    <select className="" value={this.state.select_skill_boost} onChange={ this.onSelectSkillBoost }>
+      { boost_skill_options }
+    </select>
+    <button onClick={ () => {props.card_skill('center', boost_skill_templete[this.state.select_skill_boost].data.skill)}} >centerをこれにする</button>
+
+    <hr />
+    <select value={props.cards['left'].name} onChange={ (e) => props.card_name('left', e.target.value) }>
+      { options_character_name }
     </select>
     <br />
-    <select className="" value={this.state.skill_temp_select} onChange={ this.onSelectSkill }>
-      { skill_options }
+    ATK
+    <input tyep="text" value={props.cards['center'].atk} onChange={ (e) => props.card_atk('center', e.target.value) } /><br />
+    Skill value
+    <input tyep="text" value={props.cards['center'].skill.value} onChange={ (e) => props.card_skill_value('center', e.target.value) } /><br />
+    Skill2 value
+    <input tyep="text" value={props.cards['center'].skill.skill2.value} onChange={ (e) => props.card_skill2_value('center', e.target.value) } /><br />
+
+    <br />
+    Skill Type
+    <select value={props.cards['center'].skill.type} onChange={ (e) => props.card_skill_type('center', e.target.value) }>
+      <option value={ATTACK}>ATTACK</option>
+      <option value={BOOST}>BOOST</option>
     </select>
-    <button onClick={ () => {props.card_skill('center', skill_templete[this.state.skill_temp_select].data.skill)}} >testet</button>
-    <button onClick={ console.log(skill_templete[this.state.skill_temp_select].data)} >testet</button>
-    <select value={props.cards['center'].name} onChange={ (e) => props.card_skill('center', e.target.value) }>
-      <option value={111} >111</option>
-      <option value={222} >222</option>
-      <option value={333} >333</option>
+
+    <br />
+    Skill Boss
+    <select value={props.cards['center'].skill.boss} onChange={ (e) => props.card_skill_boss('center', e.target.value) }>
+      <option value={NORMAL}>通常</option>
+      <option value={BOSS}>ボス</option>
+      <option value={SENSEI}>先制</option>
+      <option value={TUIGEKI}>追撃</option>
     </select>
+
+    <br />
+    Skill Fusion
+    <select value={props.cards['center'].skill.fusion} onChange={ (e) => props.card_skill_fusion('center', e.target.value) }>
+      <option value={false}>なし</option>
+      <option value={true}>フージョン</option>
+    </select>
+
+    <br />
+    Skill Target
+    <select value={props.cards['center'].skill.target} onChange={ (e) => props.card_skill_target('center', e.target.value) }>
+      <option value={NONE}>なし</option>
+      <option value={ATK}>[ATTACK]ブースト</option>
+      <option value={ATR}>[ATTACK][属性]ブースト</option>
+      <option value={ATC}>[ATTACK][キャラ]ブースト</option>
+      <option value={CHA}>[キャラ]ブースト</option>
+    </select>
+
     <div id="Simulate">
       <hr />
       <h2>#しみゅれーと</h2>
@@ -218,10 +283,10 @@ const setumei = props => {
       mes += 'バトル後半で、'
       break
     case SENSEI:
-      mes += 'バトル前半で、'
+      mes += '対戦相手を撃破するまで、'
       break
     case TUIGEKI:
-      mes += '対戦相手を撃破後、'
+      mes += '対戦相手のライフ0%の時、'
       break
     default:
       break
@@ -256,6 +321,9 @@ const setumei = props => {
       break
   }
   switch(props.skill2.boss){
+    case NORMAL:
+      mes += `(さらに自身の攻撃力${props.skill2.value}%アップ)`
+      break
     case BOSS:
       mes += `(さらにバトル後半で、自身の攻撃力${props.skill2.value}%アップ)`
       break
@@ -399,6 +467,12 @@ const getAtk2 = (self, cards, bosstime) => {
   let alfa_boost = 0
   let beta_boost = 0
 
+  //追加スキル持ちBOOSTも居る
+  let skill2 = 0
+  if(cards[self].skill.skill2.value) {
+    skill2 = cards[self].skill.skill2.value * correctionBosstime(cards[self].skill.skill2.boss, bosstime) /100
+  }
+
   if(cards[self].skill.type === BOOST) {
     // CHAの時のみ自身にもブーストがかかる
     // BOOSTなのでfusionは無視
@@ -415,7 +489,10 @@ const getAtk2 = (self, cards, bosstime) => {
         cards[self].name === cards[beta].name) {
       beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
     }
-      return cards[self].atk * (100 + self_boost + alfa_boost + beta_boost ) /100
+    if( cards[self].skill.skill2.boss !== NORMAL){
+
+    }
+    return cards[self].atk * (100 + self_boost + alfa_boost + beta_boost + skill2) /100
   }else {
 
     boss_attack = correctionBosstime(cards[self].skill.boss, bosstime)
@@ -460,10 +537,6 @@ const getAtk2 = (self, cards, bosstime) => {
     if(cards[self].name === cards[beta].name) fusion += 1
   }
 
-  let skill2 = 0
-  if(cards[self].skill.skill2.value) {
-    skill2 = cards[self].skill.skill2.value * correctionBosstime(cards[self].skill.skill2.boss, bosstime) /100
-  }
 
   return Math.round(cards[self].atk * (100 + cards[self].skill.value *fusion *boss_attack/100 + skill2 + alfa_boost + beta_boost ) )/100
 
@@ -479,6 +552,7 @@ const correctionBosstime = (boss, bosstime) => {
     case TUIGEKI:
       return 100 - bosstime.done
       break
+    case NORMAL:
     default:
       return 100
   }
@@ -496,8 +570,14 @@ const mapDispatchToProps = ({
   card_atk,
   card_name,
   card_skill,
-  input_boss_enter,
-  input_boss_done
+  card_skill_type,
+  card_skill_boss,
+  card_skill_fusion,
+  card_skill_target,
+  card_skill_value,
+  card_skill2_value,
+  boss_enter,
+  boss_done
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm( {validate, form: 'simgeki_deck'})(App))

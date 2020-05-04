@@ -1,18 +1,35 @@
 import {
-  SELECT_CARD_NAME,
-  SELECT_CARD_ATK,
-  SELECT_CARD_SKILL,
-  INPUT_BOSS_ENTER,
-  INPUT_BOSS_DONE
+  CARD_NAME,
+  CARD_ATK,
+  CARD_SKILL,
+  CARD_SKILL_TYPE,
+  CARD_SKILL_BOSS,
+  CARD_SKILL_FUSION,
+  CARD_SKILL_TARGET,
+  CARD_SKILL_VALUE,
+  CARD_SKILL2_VALUE,
+  BOSS_ENTER,
+  BOSS_DONE
 } from '../actions'
+
+import {
+  AKARI, YUZU, AOI,
+  RIO, RIKU, TSUBAKI,
+  HARUNA, AYAKA,
+  KOBOSHI, SAKI,
+  AKANE, KAEDE, ARISU,
+  CHINATSU, TSUMUGI, MIA
+} from '../data/character_names.js'
 
 export const ATTACK = 'ATTACK'
 export const BOOST = 'BOOST'
 
+export const NORMAL = 'NOMAL'
 export const BOSS = 'BOSS'
 export const SENSEI = 'SENSEI'
 export const TUIGEKI = 'TUIGEKI'
 
+export const NONE = 'NONE'
 export const ATK = 'ATK'
 export const ATR = 'ATR'
 export const ATC = 'ATC'
@@ -22,9 +39,10 @@ export const FIRE = 'FIRE'
 export const LEAF = 'LEAF'
 export const AQUA = 'AQUA'
 
-export const AKARI = '星咲あかり'
-export const AOI = '三角葵'
-export const YUZU = '藤沢柚'
+
+
+const MAX_ATK_VALUE = 999
+const MAX_SKILL_VALUE = 99
 
 const updateMessage = () =>{
   let mes = []
@@ -87,7 +105,7 @@ const initialCard = {
     value: 20,
     skill2: {
       boss: null,
-      value: null
+      value: 0
     }
   }
 }
@@ -102,7 +120,7 @@ const initialCardLeft = Object.assign({}, initialCard,{
     value: 20,
     skill2: {
       boss: null,
-      value: null
+      value: 0
     }
   }
 })
@@ -132,6 +150,16 @@ const initialState = {  mes: ['ようこそ'],
                                   }
                       }
 
+const validate = (value, max) => {
+  if( value >= 0 && value <= max){
+    return Math.floor(value)
+  }else if( value > max){
+    return max
+  }else{
+    return 0
+  }
+}
+
 const validateEnter = v => {
   if(v.enter >= 100){
     return { enter: 100, done: 100 }
@@ -155,57 +183,144 @@ const validateDone = v => {
 const getChar2Attr = char => {
   switch(char) {
     case AKARI:
+    case RIKU:
+    case HARUNA:
+    case AKANE:
+    case MIA:
       return FIRE
     case AOI:
+    case RIO:
+    case AYAKA:
+    case SAKI:
+    case ARISU:
+    case TSUMUGI:
       return AQUA
     case YUZU:
+    case TSUBAKI:
+    case KOBOSHI:
+    case KAEDE:
+    case CHINATSU:
       return LEAF
+    default:
   }
 }
+
 export default (state = initialState, action) => {
   let new_card = {}
 
   switch(action.type){
-    case SELECT_CARD_NAME:
-    new_card = Object.assign({}, state.cards[action.position] ,{
-        name: action.value,
-        attr: getChar2Attr( action.value),
-    })
-      return Object.assign({}, state ,{
-          cards: Object.assign({}, state.cards, {
-            [action.position]: new_card
+    case CARD_NAME:
+      new_card = {...state.cards[action.position],
+          name: action.value,
+          attr: getChar2Attr( action.value),
+      }
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_ATK:
+      new_card = {...state.cards[action.position] ,
+        atk: validate(action.value, MAX_ATK_VALUE)
+      }
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL:
+      new_card = Object.assign({}, state.cards[action.position] ,{
+          skill: action.value
+      })
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL_TYPE:
+      if(action.value === ATTACK){
+        new_card = {...state.cards[action.position] ,
+            skill: {...state.cards[action.position].skill,
+              type: ATTACK,
+              target: NONE,
+              boss: state.cards[action.position].skill.boss,
+              fusion: state.cards[action.position].skill.fusion,
+              skill2: state.cards[action.position].skill.skill2
+        }}
+      }else{
+        new_card = {...state.cards[action.position] ,
+            skill: {...state.cards[action.position].skill,
+              type: BOOST,
+              boss: NORMAL,
+              fusion: false,
+              target: ATR,
+              skill2: state.cards[action.position].skill.skill2
+        }}
+      }
+      return {...state, cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL_BOSS:
+      new_card = {...state.cards[action.position] ,
+          skill: {...state.cards[action.position].skill,
+            boss: action.value
+      }}
+      return {...state, cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL_FUSION:
+      new_card = {...state.cards[action.position] ,
+          skill: {...state.cards[action.position].skill,
+            fusion: action.value
+      }}
+      return {...state, cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL_TARGET:
+      new_card = {...state.cards[action.position] ,
+          skill: {...state.cards[action.position].skill,
+            target: action.value
+      }}
+      return {...state, cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL_VALUE:
+      new_card = Object.assign({}, state.cards[action.position] ,{
+          skill: Object.assign({}, state.cards[action.position].skill ,{
+              value: validate(action.value, MAX_SKILL_VALUE)
           })
       })
-    case SELECT_CARD_ATK:
-    new_card = Object.assign({}, state.cards[action.position] ,{
-        atk: action.value
-    })
-      return Object.assign({}, state ,{
-          cards: Object.assign({}, state.cards, {
-            [action.position]: new_card
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL2_VALUE:
+      new_card = Object.assign({}, state.cards[action.position] ,{
+          skill: Object.assign({}, state.cards[action.position].skill ,{
+              skill2: Object.assign({}, state.cards[action.position].skill2 ,{
+                  value: validate(action.value, MAX_SKILL_VALUE)
+              })
           })
       })
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
 
-    case SELECT_CARD_SKILL:
-    new_card = Object.assign({}, state.cards[action.position] ,{
-        skill: action.value
-    })
-    console.log(new_card)
-      return Object.assign({}, state ,{
-          cards: Object.assign({}, state.cards, {
-            [action.position]: new_card
-          })
-      })
+    case BOSS_ENTER:
+      return {...state,
+        bosstime: validateEnter({ enter: action.value, done: state.bosstime.done })
+      }
 
-    case INPUT_BOSS_ENTER:
-      return Object.assign({}, state,{
-        bosstime: validateEnter({ enter: action.value, done: state.bosstime.done }),
-      })
-
-    case INPUT_BOSS_DONE:
-      return Object.assign({}, state,{
+    case BOSS_DONE:
+      return {...state,
         bosstime: validateDone({ done: action.value, enter: state.bosstime.enter }),
-      })
+      }
 
     default:
       return state
