@@ -1,7 +1,15 @@
 body{
   background: #fff;
 }
-
+.c-left{
+  clear: left;
+}
+.input-table{
+  float: left;
+  table{
+    max-width: 33%;
+  }
+}
 .back-FIRE{
   background: rgba(255, 100, 100, 0.3);
 }

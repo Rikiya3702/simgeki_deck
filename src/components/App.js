@@ -139,39 +139,28 @@ class App extends Component {
     <input tyep="text" value={props.cards['center'].skill.skill2.value} onChange={ (e) => props.card_skill2_value('center', e.target.value) } /><br />
 
     <br />
-    Skill Type
-    <select value={props.cards['center'].skill.type} onChange={ (e) => props.card_skill_type('center', e.target.value) }>
-      <option value={ATTACK}>ATTACK</option>
-      <option value={BOOST}>BOOST</option>
-    </select>
+    <SkillType value={props.cards['center'].skill.type} position="center" cardSkillType={props.card_skill_type} />
 
     <br />
-    Skill Boss
-    <select value={props.cards['center'].skill.boss} onChange={ (e) => props.card_skill_boss('center', e.target.value) }>
-      <option value={NORMAL}>通常</option>
-      <option value={BOSS}>ボス</option>
-      <option value={SENSEI}>先制</option>
-      <option value={TUIGEKI}>追撃</option>
-    </select>
+
+    <SkillBoss value={props.cards['center'].skill.boss} position="center" cardSkillBoss={props.card_skill_boss} />
 
     <br />
-    Skill Fusion
-    <select value={props.cards['center'].skill.fusion} onChange={ (e) => props.card_skill_fusion('center', e.target.value) }>
-      <option value={false}>なし</option>
-      <option value={true}>フージョン</option>
-    </select>
-
+    {props.cards['center'].skill.type === ATTACK &&
+      <SkillFusion value={props.cards['center'].skill.fusion} position="center" cardSkillFusion={props.card_skill_fusion} />
+    }
     <br />
-    Skill Target
-    <select value={props.cards['center'].skill.target} onChange={ (e) => props.card_skill_target('center', e.target.value) }>
-      <option value={NONE}>なし</option>
-      <option value={ATK}>[ATTACK]ブースト</option>
-      <option value={ATR}>[ATTACK][属性]ブースト</option>
-      <option value={ATC}>[ATTACK][キャラ]ブースト</option>
-      <option value={CHA}>[キャラ]ブースト</option>
-    </select>
-
-    <div id="Simulate">
+    {props.cards['center'].skill.type === BOOST &&
+      <SkillTarget value={props.cards.center.skill.target} position="center" cardSkillTarget={props.card_skill_target} />
+    }
+    <div id="Inputs">
+    <hr />
+    <h2>#いんぷっつ</h2>
+    <InputTable card={props.cards.left} position="left" />
+    <InputTable card={props.cards.center} position="center" />
+    <InputTable card={props.cards.right} position="right" />
+    </div>
+    <div id="Simulate" className="c-left">
       <hr />
       <h2>#しみゅれーと</h2>
       <table>
@@ -247,6 +236,77 @@ class App extends Component {
 </React.Fragment>
 
   )}
+}
+
+const InputTable = props => {
+  return(
+    <div className="input-table">
+      <table>
+        <thead>
+          <tr><th colSpan="2">【{props.position.toUpperCase()}】</th></tr>
+        </thead>
+        <tbody className={`back-${props.card.attr}`}>
+          <tr><td colSpan="2">{props.card.name}</td></tr>
+          <tr>
+            <td>{props.card.attr}</td>
+            <td>{props.card.skill.type}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+const SkillType = props => {
+  return(
+    <React.Fragment>
+      Skill Type [{props.position}]
+      <select value={props.value} onChange={ (e) => props.cardSkillType(props.position, e.target.value) }>
+        <option value={ATTACK}>【ATTACK】</option>
+        <option value={BOOST}>【BOOST】</option>
+      </select>
+    </React.Fragment>
+  )
+}
+
+const SkillBoss = props => {
+  return(
+    <React.Fragment>
+      Skill Boss [{props.position}]
+      <select value={props.value} onChange={ (e) => props.cardSkillBoss(props.position, e.target.value) }>
+        <option value={NORMAL}>通常</option>
+        <option value={BOSS}>ボス</option>
+        <option value={SENSEI}>先制</option>
+        <option value={TUIGEKI}>追撃</option>
+      </select>
+    </React.Fragment>
+  )
+}
+
+const SkillFusion = props => {
+  return(
+    <React.Fragment>
+      Skill Fusion [{props.position}]
+      <select value={props.value} onChange={ (e) => props.cardSkillFusion(props.position, e.target.value) }>
+        <option value={false}>なし</option>
+        <option value={true}>フージョン</option>
+      </select>
+    </React.Fragment>
+  )
+}
+
+const SkillTarget = props => {
+  return(
+    <React.Fragment>
+      Skill Target [{props.position}]
+      <select value={props.value} onChange={ (e) => props.cardSkillTarget(props.position, e.target.value) }>
+        <option value={NONE}>なし</option>
+        <option value={ATK}>[ATTACK]ブースト</option>
+        <option value={ATR}>[ATTACK][属性]ブースト</option>
+        <option value={ATC}>[ATTACK][キャラ]ブースト</option>
+        <option value={CHA}>[キャラ]ブースト</option>
+      </select>
+    </React.Fragment>
+  )
 }
 
 const Card = props => {
