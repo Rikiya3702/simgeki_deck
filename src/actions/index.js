@@ -5,6 +5,7 @@ export const CARD_SKILL_TYPE = "CARD_SKILL_TYPE"
 export const CARD_SKILL_BOSS = "CARD_SKILL_BOSS"
 export const CARD_SKILL_FUSION = "CARD_SKILL_FUSION"
 export const CARD_SKILL_TARGET = "CARD_SKILL_TARGET"
+export const CARD_SKILL_SKILL2 = "CARD_SKILL_SKILL2"
 export const CARD_SKILL_VALUE = "CARD_SKILL_VALUE"
 export const CARD_SKILL2_VALUE = "CARD_SKILL2_VALUE"
 
@@ -43,6 +44,11 @@ export const card_skill_fusion = (position, value) => ({
 })
 export const card_skill_target = (position, value) => ({
   type: CARD_SKILL_TARGET,
+  position: position,
+  value: value
+})
+export const card_skill_skill2 = (position, value) => ({
+  type: CARD_SKILL_SKILL2,
   position: position,
   value: value
 })

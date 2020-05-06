@@ -1,4 +1,5 @@
 import {
+  TEMPLETE,
   ATTACK,
   NORMAL,
   NONE,
@@ -8,6 +9,21 @@ import {
 } from '../reducers/input.js'
 
 export default [
+  { label: 'テンプレートを選択して下さい',
+    data:{
+      skill: {
+        type: TEMPLETE,
+        boss: NORMAL,
+        fusion: false,
+        target: NONE,
+        value: 15,
+        skill2: {
+          boss: NONE,
+          value: 0
+        }
+      }
+    }
+  },
   { label: 'アタック',
     data:{
       skill: {

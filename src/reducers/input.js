@@ -6,6 +6,7 @@ import {
   CARD_SKILL_BOSS,
   CARD_SKILL_FUSION,
   CARD_SKILL_TARGET,
+  CARD_SKILL_SKILL2,
   CARD_SKILL_VALUE,
   CARD_SKILL2_VALUE,
   BOSS_ENTER,
@@ -21,6 +22,7 @@ import {
   CHINATSU, TSUMUGI, MIA
 } from '../data/character_names.js'
 
+export const TEMPLETE = 'TEMPLETE'
 export const ATTACK = 'ATTACK'
 export const BOOST = 'BOOST'
 
@@ -229,6 +231,9 @@ export default (state = initialState, action) => {
               }}
 
     case CARD_SKILL:
+      if(action.value.type === 'TEMPLETE'){
+        return state
+      }
       new_card = Object.assign({}, state.cards[action.position] ,{
           skill: action.value
       })
@@ -284,6 +289,16 @@ export default (state = initialState, action) => {
           skill: {...state.cards[action.position].skill,
             target: action.value
       }}
+      return {...state, cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SKILL_SKILL2:
+      new_card = {...state.cards[action.position] ,
+          skill: {...state.cards[action.position].skill,
+            skill2: { ...state.cards[action.position].skill.skill2,
+                boss: action.value
+      }}}
       return {...state, cards: {...state.cards,
                   [action.position]: new_card
               }}

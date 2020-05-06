@@ -12,6 +12,7 @@ import {
   card_skill_boss,
   card_skill_fusion,
   card_skill_target,
+  card_skill_skill2,
   card_skill_value,
   card_skill2_value,
   boss_enter,
@@ -31,7 +32,8 @@ import {
   ATC,
   CHA
 } from '../reducers/input.js'
-import card_templete from '../data/index.js'
+
+import card_templete from '../data/cards.js'
 import attack_skill_templete from '../data/skill_attacks.js'
 import boost_skill_templete from '../data/skill_boosts.js'
 import select_chars from '../data/select_chars.js'
@@ -41,22 +43,12 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      card_temp_select: 1,
-      select_skill_attack: 1,
-      select_skill_boost: 1
+      card_temp_select: 0,
     }
     this.onSelect = this.onSelect.bind(this);
-    this.onSelectSkillAttack = this.onSelectSkillAttack.bind(this);
-    this.onSelectSkillBoost = this.onSelectSkillBoost.bind(this);
   }
   onSelect = (e) => {
   this.setState( {card_temp_select: e.target.value} )
-  }
-  onSelectSkillAttack = (e) => {
-  this.setState( {select_skill_attack: e.target.value} )
-  }
-  onSelectSkillBoost = (e) => {
-  this.setState( {select_skill_boost: e.target.value} )
   }
 
   render(){
@@ -72,21 +64,7 @@ class App extends Component {
           {t.label}
         </option>
       )
-    );
-    const attack_skill_options = attack_skill_templete.map(
-      (t, index)=>(
-        <option key={ index } value={ index }>
-          {t.label}
-        </option>
-      )
-    );
-    const boost_skill_options = boost_skill_templete.map(
-      (t, index)=>(
-        <option key={ index } value={ index }>
-          {t.label}
-        </option>
-      )
-    );
+    )
     const options_character_name = select_chars.map(
         (m, index)=>(
           <option key={ index } value={ m.value }>
@@ -95,9 +73,7 @@ class App extends Component {
         )
       )
 
-
     return (
-
 <React.Fragment>
   <div id="App">
     <header>
@@ -108,57 +84,57 @@ class App extends Component {
       { card_options }
     </select>
     {this.state.card_temp_select}
-    <Card card={card_templete[this.state.card_temp_select].data} />
-    <hr /><hr />
-    <Card card={props.cards.left} position="left"/>
-    <Card card={props.cards.center} />
-    <Card card={props.cards.right} />
-
-    <br />
-    <select className="" value={this.state.select_skill_attack} onChange={ this.onSelectSkillAttack }>
-      { attack_skill_options }
-    </select>
-    <button onClick={ () => {props.card_skill('center', attack_skill_templete[this.state.select_skill_attack].data.skill)}} >centerをこれにする</button>
-
-    <br />
-    <select className="" value={this.state.select_skill_boost} onChange={ this.onSelectSkillBoost }>
-      { boost_skill_options }
-    </select>
-    <button onClick={ () => {props.card_skill('center', boost_skill_templete[this.state.select_skill_boost].data.skill)}} >centerをこれにする</button>
-
+    // <Card card={card_templete[this.state.card_temp_select].data} />
     <hr />
-    <select value={props.cards['left'].name} onChange={ (e) => props.card_name('left', e.target.value) }>
-      { options_character_name }
-    </select>
-    <br />
-    ATK
-    <input tyep="text" value={props.cards['center'].atk} onChange={ (e) => props.card_atk('center', e.target.value) } /><br />
-    Skill value
-    <input tyep="text" value={props.cards['center'].skill.value} onChange={ (e) => props.card_skill_value('center', e.target.value) } /><br />
-    Skill2 value
-    <input tyep="text" value={props.cards['center'].skill.skill2.value} onChange={ (e) => props.card_skill2_value('center', e.target.value) } /><br />
 
-    <br />
-    <SkillType value={props.cards['center'].skill.type} position="center" cardSkillType={props.card_skill_type} />
-
-    <br />
-
-    <SkillBoss value={props.cards['center'].skill.boss} position="center" cardSkillBoss={props.card_skill_boss} />
-
-    <br />
-    {props.cards['center'].skill.type === ATTACK &&
-      <SkillFusion value={props.cards['center'].skill.fusion} position="center" cardSkillFusion={props.card_skill_fusion} />
-    }
-    <br />
-    {props.cards['center'].skill.type === BOOST &&
-      <SkillTarget value={props.cards.center.skill.target} position="center" cardSkillTarget={props.card_skill_target} />
-    }
     <div id="Inputs">
     <hr />
     <h2>#いんぷっつ</h2>
-    <InputTable card={props.cards.left} position="left" />
-    <InputTable card={props.cards.center} position="center" />
-    <InputTable card={props.cards.right} position="right" />
+    <InputTable
+      card={props.cards.left}
+      position="left"
+      charNames={options_character_name}
+      cardName={props.card_name}
+      cardSkill={props.card_skill}
+      cardSkillType={props.card_skill_type}
+      cardSkillBoss={props.card_skill_boss}
+      cardSkillFusion={props.card_skill_fusion}
+      cardSkillTarget={props.card_skill_target}
+      cardSkillSkill2={props.card_skill_skill2}
+      cardAtk={props.card_atk}
+      cardSkillValue={props.card_skill_value}
+      cardSkillValue2={props.card_skill2_value}
+    />
+    <InputTable
+      card={props.cards.center}
+      position="center"
+      charNames={options_character_name}
+      cardName={props.card_name}
+      cardSkill={props.card_skill}
+      cardSkillType={props.card_skill_type}
+      cardSkillBoss={props.card_skill_boss}
+      cardSkillFusion={props.card_skill_fusion}
+      cardSkillTarget={props.card_skill_target}
+      cardSkillSkill2={props.card_skill_skill2}
+      cardAtk={props.card_atk}
+      cardSkillValue={props.card_skill_value}
+      cardSkillValue2={props.card_skill2_value}
+    />
+    <InputTable
+      card={props.cards.right}
+      position="right"
+      charNames={options_character_name}
+      cardName={props.card_name}
+      cardSkill={props.card_skill}
+      cardSkillType={props.card_skill_type}
+      cardSkillBoss={props.card_skill_boss}
+      cardSkillFusion={props.card_skill_fusion}
+      cardSkillTarget={props.card_skill_target}
+      cardSkillSkill2={props.card_skill_skill2}
+      cardAtk={props.card_atk}
+      cardSkillValue={props.card_skill_value}
+      cardSkillValue2={props.card_skill2_value}
+    />
     </div>
     <div id="Simulate" className="c-left">
       <hr />
@@ -184,9 +160,9 @@ class App extends Component {
             <td className={`back-${props.cards.right.skill.type}`}>[{props.cards.right.skill.type}]</td>
           </tr>
           <tr>
-            <td colSpan="2" style={{width:200 }}>{setumei(props.cards.left.skill)}</td>
-            <td colSpan="2" style={{width:200 }}>{setumei(props.cards.center.skill)}</td>
-            <td colSpan="2" style={{width:200 }}>{setumei(props.cards.right.skill)}</td>
+            <td colSpan="2" style={{width:200 }}>{setumei(props.cards.left)}</td>
+            <td colSpan="2" style={{width:200 }}>{setumei(props.cards.center)}</td>
+            <td colSpan="2" style={{width:200 }}>{setumei(props.cards.right)}</td>
           </tr>
           <tr>
             <td>素ATK</td>
@@ -224,11 +200,11 @@ class App extends Component {
       </table>
       <h3>合計の攻撃力</h3><h1>[{atk_sum}]</h1>
       <span>ボス出現</span>
-      <input type="range" max="100" min="0" step="1" autoComplete="off" value={ props.bosstime.enter } onChange={ (e) => { props.input_boss_enter(e.target.value) }} />
+      <input type="range" max="100" min="0" step="1" autoComplete="off" value={ props.bosstime.enter } onChange={ (e) => { props.boss_enter(e.target.value) }} />
       <span>{ props.bosstime.enter }</span>
       <br />
       <span>ボス撃破</span>
-      <input type="range" max="100" min="0" step="1" autoComplete="off" value={ props.bosstime.done } onChange={ (e) => { props.input_boss_done(e.target.value) }} />
+      <input type="range" max="100" min="0" step="1" autoComplete="off" value={ props.bosstime.done } onChange={ (e) => { props.boss_done(e.target.value) }} />
       <span>{ props.bosstime.done }</span>
     </div>
 
@@ -238,7 +214,40 @@ class App extends Component {
   )}
 }
 
-const InputTable = props => {
+class InputTable extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      select_skill_attack: 0,
+      select_skill_boost: 0
+    }
+    this.onSelectSkillAttack = this.onSelectSkillAttack.bind(this);
+    this.onSelectSkillBoost = this.onSelectSkillBoost.bind(this);
+  }
+  onSelectSkillAttack = (e) => {
+  this.setState( {select_skill_attack: e.target.value} )
+  }
+  onSelectSkillBoost = (e) => {
+  this.setState( {select_skill_boost: e.target.value} )
+  }
+
+  render(){
+    const props = this.props
+
+    const attack_skill_options = attack_skill_templete.map(
+      (t, index)=>(
+        <option key={ index } value={ index }>
+          {t.label}
+        </option>
+      )
+    )
+    const boost_skill_options = boost_skill_templete.map(
+      (t, index)=>(
+        <option key={ index } value={ index }>
+          {t.label}
+        </option>
+      )
+    )
   return(
     <div className="input-table">
       <table>
@@ -246,20 +255,75 @@ const InputTable = props => {
           <tr><th colSpan="2">【{props.position.toUpperCase()}】</th></tr>
         </thead>
         <tbody className={`back-${props.card.attr}`}>
-          <tr><td colSpan="2">{props.card.name}</td></tr>
+          <tr><td colSpan="2">
+            <select value={props.card.name} onChange={ (e) => props.cardName(props.position, e.target.value) }>
+              { props.charNames }
+            </select>
+          </td></tr>
           <tr>
             <td>{props.card.attr}</td>
-            <td>{props.card.skill.type}</td>
+            <td className={`back-${props.card.skill.type}`}>
+              <SkillType value={props.card.skill.type} position={props.position} cardSkillType={props.cardSkillType} />
+              <br />
+              {props.card.skill.type === ATTACK &&
+                <React.Fragment>
+                  <select value={this.state.select_skill_attack} onChange={ this.onSelectSkillAttack }>
+                    { attack_skill_options }
+                  </select>
+                  <button onClick={ () => {props.cardSkill(props.position, attack_skill_templete[this.state.select_skill_attack].data.skill)}} >{props.position.toUpperCase()}をこれにする</button>
+                </React.Fragment>
+              }
+              {props.card.skill.type === BOOST &&
+                <React.Fragment>
+                  <select value={this.state.select_skill_boost} onChange={ this.onSelectSkillBoost }>
+                    { boost_skill_options }
+                  </select>
+                  <button onClick={ () => {props.cardSkill(props.position, boost_skill_templete[this.state.select_skill_boost].data.skill)}} >{props.position.toUpperCase()}をこれにする</button>
+                </React.Fragment>
+              }
+            </td>
+          </tr>
+          <tr>
+            <td>発動タイミング</td>
+            <td><SkillBoss value={props.card.skill.boss} position={props.position} cardSkillBoss={props.cardSkillBoss} /></td>
+          </tr>
+          {props.card.skill.type === ATTACK &&
+            <tr>
+              <td>フュージョン</td>
+              <td><SkillFusion value={props.card.skill.fusion} position={props.position} cardSkillFusion={props.cardSkillFusion} /></td>
+            </tr>
+          }
+          {props.card.skill.type === BOOST &&
+            <tr>
+              <td>ブースト対象</td>
+              <td><SkillTarget value={props.card.skill.target} position={props.position} cardSkillTarget={props.cardSkillTarget} /></td>
+            </tr>
+          }
+          <tr>
+            <td>追加スキル</td>
+            <td><SkillSkill2 value={props.card.skill.skill2.boss} position={props.position} cardSkillSkill2={props.cardSkillSkill2} /></td>
+          </tr>
+          <tr>
+            <td>攻撃力</td>
+            <td><input tyep="text" value={props.card.atk} onChange={ (e) => props.cardAtk(props.position, e.target.value) } /></td>
+          </tr>
+          <tr>
+            <td>スキル効果</td>
+            <td><input tyep="text" value={props.card.skill.value} onChange={ (e) => props.cardSkillValue(props.position, e.target.value) } />％</td>
+          </tr>
+          <tr>
+            <td>追加スキル効果</td>
+            <td><input tyep="text" value={props.card.skill.skill2.value} onChange={ (e) => props.cardSkill2Value(props.position, e.target.value) } />％</td>
           </tr>
         </tbody>
       </table>
     </div>
-  )
+  )}
 }
+
 const SkillType = props => {
   return(
     <React.Fragment>
-      Skill Type [{props.position}]
       <select value={props.value} onChange={ (e) => props.cardSkillType(props.position, e.target.value) }>
         <option value={ATTACK}>【ATTACK】</option>
         <option value={BOOST}>【BOOST】</option>
@@ -271,7 +335,6 @@ const SkillType = props => {
 const SkillBoss = props => {
   return(
     <React.Fragment>
-      Skill Boss [{props.position}]
       <select value={props.value} onChange={ (e) => props.cardSkillBoss(props.position, e.target.value) }>
         <option value={NORMAL}>通常</option>
         <option value={BOSS}>ボス</option>
@@ -285,7 +348,6 @@ const SkillBoss = props => {
 const SkillFusion = props => {
   return(
     <React.Fragment>
-      Skill Fusion [{props.position}]
       <select value={props.value} onChange={ (e) => props.cardSkillFusion(props.position, e.target.value) }>
         <option value={false}>なし</option>
         <option value={true}>フージョン</option>
@@ -297,7 +359,6 @@ const SkillFusion = props => {
 const SkillTarget = props => {
   return(
     <React.Fragment>
-      Skill Target [{props.position}]
       <select value={props.value} onChange={ (e) => props.cardSkillTarget(props.position, e.target.value) }>
         <option value={NONE}>なし</option>
         <option value={ATK}>[ATTACK]ブースト</option>
@@ -309,13 +370,26 @@ const SkillTarget = props => {
   )
 }
 
+const SkillSkill2 = props => {
+  return(
+    <React.Fragment>
+      <select value={props.value} onChange={ (e) => props.cardSkillSkill2(props.position, e.target.value) }>
+        <option value={NONE}>なし</option>
+        <option value={NORMAL}>通常</option>
+        <option value={BOSS}>ボス</option>
+        <option value={TUIGEKI}>追撃</option>
+      </select>
+    </React.Fragment>
+  )
+}
+
 const Card = props => {
   return(
     <React.Fragment>
       <hr />
       <table className={`back-${props.card.attr}`}>
         <thead>
-          <tr><th colSpan="2">カードでーた【{props.card.name}】({props.card.attr})</th></tr>
+          <tr><th colSpan="2">【{props.card.name}】({props.card.attr})</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -324,11 +398,11 @@ const Card = props => {
           </tr>
           <tr>
             <td>スキルタイプ</td>
-            <td>{props.card.skill.type}</td>
+            <td>{ props.card.skill.type }</td>
           </tr>
           <tr>
             <td>せつめい</td>
-            <td>{setumei(props.card.skill)}</td>
+            <td>{ setumei(props.card) }</td>
           </tr>
         </tbody>
       </table>
@@ -338,7 +412,8 @@ const Card = props => {
 
 const setumei = props => {
   let mes = ''
-  switch(props.boss){
+
+  switch(props.skill.boss){
     case BOSS:
       mes += 'バトル後半で、'
       break
@@ -351,47 +426,47 @@ const setumei = props => {
     default:
       break
   }
-  switch(props.target){
+  switch(props.skill.target){
     case ATK:
       mes += '[ATTACK]の'
       break
     case ATR:
-      mes += '[ATTACK]かつ[同属性]の'
+      mes += `[ATTACK]かつ[${props.attr}]の`
       break
     case ATC:
-      mes += '[ATTACK]かつ[同キャラ]の'
+      mes += `[ATTACK]かつ[${props.name}]の`
       break
     case CHA:
-      mes += '[同キャラ]の'
+      mes += `[${props.name}]の`
       break
     default:
       break
   }
-  if(props.fusion){
-    mes += '同じキャラのカード1枚につき'
+  if(props.skill.fusion){
+    mes += `[${props.name}]のカード1枚につき`
   }
-  switch(props.type){
+  switch(props.skill.type){
     case ATTACK:
-      mes += `自身の攻撃力${props.value}%アップ`
+      mes += `自身の攻撃力${props.skill.value}%アップ`
       break
     case BOOST:
-      mes += `攻撃力${props.value}%アップ`
+      mes += `攻撃力${props.skill.value}%アップ`
       break
     default:
       break
   }
-  switch(props.skill2.boss){
+  switch(props.skill.skill2.boss){
     case NORMAL:
-      mes += `(さらに自身の攻撃力${props.skill2.value}%アップ)`
+      mes += `(さらに自身の攻撃力${props.skill.skill2.value}%アップ)`
       break
     case BOSS:
-      mes += `(さらにバトル後半で、自身の攻撃力${props.skill2.value}%アップ)`
+      mes += `(さらにバトル後半で、自身の攻撃力${props.skill.skill2.value}%アップ)`
       break
     case SENSEI:
-      mes += `(さらにバトル前半で、自身の攻撃力${props.skill2.value}%アップ)`
+      mes += `(さらに対戦相手を撃破するまで、自身の攻撃力${props.skill.skill2.value}%アップ)`
       break
     case TUIGEKI:
-      mes += `(さらに対戦相手を撃破後、自身の攻撃力${props.skill2.value}%アップ)`
+      mes += `(さらに対戦相手のライフ0%の時、自身の攻撃力${props.skill.skill2.value}%アップ)`
       break
     default: break
   }
@@ -634,6 +709,7 @@ const mapDispatchToProps = ({
   card_skill_boss,
   card_skill_fusion,
   card_skill_target,
+  card_skill_skill2,
   card_skill_value,
   card_skill2_value,
   boss_enter,

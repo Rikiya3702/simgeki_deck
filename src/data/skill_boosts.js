@@ -1,4 +1,5 @@
 import {
+  TEMPLETE,
   BOOST,
   NORMAL,
   NONE,
@@ -10,6 +11,21 @@ import {
 } from '../reducers/input.js'
 
 export default [
+  { label: 'テンプレートを選択して下さい',
+    data: {
+      skill: {
+        type: TEMPLETE,
+        boss: NORMAL,
+        fusion: false,
+        target: ATR,
+        value: 14,
+        skill2: {
+          boss: NONE,
+          value: 0
+        }
+      }
+    }
+  },
   { label: '[同属性]ブースト',
     data: {
       skill: {
