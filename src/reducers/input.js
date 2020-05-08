@@ -106,7 +106,7 @@ const initialCard = {
     target: ATR,
     value: 20,
     skill2: {
-      boss: null,
+      boss: NONE,
       value: 0
     }
   }
@@ -118,10 +118,10 @@ const initialCardLeft = Object.assign({}, initialCard,{
     type: ATTACK,
     boss: SENSEI,
     fusion: false,
-    target:null,
+    target: NONE,
     value: 20,
     skill2: {
-      boss: null,
+      boss: NONE,
       value: 0
     }
   }
@@ -131,9 +131,9 @@ const initialCardRight = Object.assign({}, initialCard,{
   attr: LEAF,
   skill: {
     type: ATTACK,
-    boss: null,
+    boss: NORMAL,
     fusion: true,
-    target:null,
+    target: NONE,
     value: 6,
     skill2: {
       boss: BOSS,
@@ -317,8 +317,9 @@ export default (state = initialState, action) => {
     case CARD_SKILL2_VALUE:
       new_card = Object.assign({}, state.cards[action.position] ,{
           skill: Object.assign({}, state.cards[action.position].skill ,{
-              skill2: Object.assign({}, state.cards[action.position].skill2 ,{
-                  value: validate(action.value, MAX_SKILL_VALUE)
+              skill2: Object.assign({}, state.cards[action.position].skill.skill2 ,{
+                  value: validate(action.value, MAX_SKILL_VALUE),
+                  boss: state.cards[action.position].skill.skill2.boss
               })
           })
       })
