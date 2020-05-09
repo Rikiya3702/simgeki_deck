@@ -8,6 +8,9 @@ export const CARD_SKILL_TARGET = "CARD_SKILL_TARGET"
 export const CARD_SKILL_SKILL2 = "CARD_SKILL_SKILL2"
 export const CARD_SKILL_VALUE = "CARD_SKILL_VALUE"
 export const CARD_SKILL2_VALUE = "CARD_SKILL2_VALUE"
+export const CARD_SAMPLE = "CARD_SAMPLE"
+export const CARD_SAMPLE_NAME = "CARD_SAMPLE_NAME"
+export const CARD_SAMPLE_SKILL = "CARD_SAMPLE_SKILL"
 
 export const BOSS_ENTER = "BOSS_ENTER"
 export const BOSS_DONE = "BOSS_DONE"
@@ -60,6 +63,20 @@ export const card_skill_value = (position, value) => ({
 export const card_skill2_value = (position, value) => ({
   type: CARD_SKILL2_VALUE,
   position: position,
+  value: value
+})
+export const card_sample = (position, value) => ({
+  type: CARD_SAMPLE,
+  position: position,
+  value: value
+})
+export const card_sample_name = (position, value) => ({
+  type: CARD_SAMPLE_NAME,
+  position: position,
+  value: value
+})
+export const card_sample_skill = (value) => ({
+  type: CARD_SAMPLE_SKILL,
   value: value
 })
 export const boss_enter = (value) => ({

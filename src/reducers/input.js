@@ -9,6 +9,9 @@ import {
   CARD_SKILL_SKILL2,
   CARD_SKILL_VALUE,
   CARD_SKILL2_VALUE,
+  CARD_SAMPLE,
+  CARD_SAMPLE_NAME,
+  CARD_SAMPLE_SKILL,
   BOSS_ENTER,
   BOSS_DONE
 } from '../actions'
@@ -116,7 +119,7 @@ const initialCardLeft = Object.assign({}, initialCard,{
   attr: AQUA,
   skill: {
     type: ATTACK,
-    boss: SENSEI,
+    boss: NORMAL,
     fusion: false,
     target: NONE,
     value: 20,
@@ -145,8 +148,9 @@ const initialState = {  mes: ['ようこそ'],
                         updated: updateMessage(),
                         cards: {  left : initialCardLeft,
                                   center: initialCard,
-                                  right: initialCardRight,
+                                  right: initialCardRight
                                 },
+                        sample: initialCard,
                         bosstime: { enter: 50,
                                     done: 60
                                   }
@@ -327,6 +331,31 @@ export default (state = initialState, action) => {
                 cards: {...state.cards,
                   [action.position]: new_card
               }}
+
+    case CARD_SAMPLE:
+      new_card = {...state.sample,
+                    atk: action.value.atk,
+                    skill: action.value.skill
+                  }
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SAMPLE_NAME:
+      new_card = {...state.sample,
+                    name: action.value,
+                    attr: getChar2Attr( action.value),
+                  }
+      return {...state , sample: new_card }
+
+    case CARD_SAMPLE_SKILL:
+    console.log(action.value)
+      new_card = {...state.sample,
+                    atk: action.value.atk,
+                    skill: action.value.skill
+                  }
+      return {...state , sample: new_card }
 
     case BOSS_ENTER:
       return {...state,
