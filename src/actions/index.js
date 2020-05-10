@@ -14,6 +14,8 @@ export const CARD_SAMPLE_SKILL = "CARD_SAMPLE_SKILL"
 
 export const BOSS_ENTER = "BOSS_ENTER"
 export const BOSS_DONE = "BOSS_DONE"
+export const BOSS_LV = "BOSS_LV"
+export const BOSS_ATTR = "BOSS_ATTR"
 
 export const card_atk = (position, value) => ({
   type: CARD_ATK,
@@ -85,5 +87,13 @@ export const boss_enter = (value) => ({
 })
 export const boss_done = (value) => ({
   type: BOSS_DONE,
+  value: value
+})
+export const boss_lv = (value) => ({
+  type: BOSS_LV,
+  value: value
+})
+export const boss_attr = (value) => ({
+  type: BOSS_ATTR,
   value: value
 })

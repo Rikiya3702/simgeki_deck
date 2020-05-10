@@ -4,7 +4,8 @@ import {
   HARUNA, AYAKA,
   KOBOSHI, SAKI,
   AKANE, KAEDE, ARISU,
-  CHINATSU, TSUMUGI, MIA
+  CHINATSU, TSUMUGI, MIA,
+  ONNEKO_FIRE, ONNEKO_LEAF, ONNEKO_AQUA
 } from './character_names.js'
 
 export default [
@@ -55,5 +56,14 @@ export default [
   },
   { label: MIA,
     value: MIA
+  },
+  { label: ONNEKO_FIRE,
+    value: ONNEKO_FIRE
+  },
+  { label: ONNEKO_LEAF,
+    value: ONNEKO_LEAF
+  },
+  { label: ONNEKO_AQUA,
+    value: ONNEKO_AQUA
   }
 ]

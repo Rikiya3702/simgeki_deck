@@ -1,5 +1,4 @@
 import {
-  TEMPLETE,
   ATTACK,
   BOOST,
   NONE,
