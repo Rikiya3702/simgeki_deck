@@ -101,7 +101,7 @@ ATACCKかつキャラの攻撃力％アップ（全部・ボス・先制・追�
 ------------------------------------------------
  */
 const initialCard = {
-  atk: 322,
+  atk: 320,
   name: AKARI,
   attr: FIRE,
   skill: {
@@ -109,10 +109,10 @@ const initialCard = {
     boss: BOSS,
     fusion: false,
     target: NONE,
-    value: 22,
+    value: 20,
     skill2: {
-      boss: NONE,
-      value: 0
+      boss: BOSS,
+      value: 5
     }
   }
 }
@@ -122,7 +122,7 @@ const initialCardLeft = Object.assign({}, initialCard,{
     boss: NORMAL,
     fusion: false,
     target: NONE,
-    value: 16,
+    value: 15,
     skill2: {
       boss: NONE,
       value: 0
@@ -135,7 +135,7 @@ const initialCardRight = Object.assign({}, initialCard,{
     boss: NORMAL,
     fusion: false,
     target: ATR,
-    value: 22,
+    value: 10,
     skill2: {
       boss: NONE,
       value: 0

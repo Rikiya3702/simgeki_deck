@@ -58,10 +58,40 @@ export function CardsTable(props) {
             <TableCell align="right">{skillName(props.cards.right)}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Atk on skills & attribute</TableCell>
-            <TableCell align="right">{props.atk.left}</TableCell>
-            <TableCell align="right">{props.atk.center}</TableCell>
-            <TableCell align="right">{props.atk.right}</TableCell>
+            <TableCell align="right">Self Skill</TableCell>
+            <TableCell align="right">{props.atksL.self}</TableCell>
+            <TableCell align="right">{props.atksC.self}</TableCell>
+            <TableCell align="right">{props.atksR.self}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">Alfa Skill</TableCell>
+            <TableCell align="right">{props.atksL.alfa}</TableCell>
+            <TableCell align="right">{props.atksC.alfa}</TableCell>
+            <TableCell align="right">{props.atksR.alfa}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">Beta Skill</TableCell>
+            <TableCell align="right">{props.atksL.beta}</TableCell>
+            <TableCell align="right">{props.atksC.beta}</TableCell>
+            <TableCell align="right">{props.atksR.beta}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">Skill2</TableCell>
+            <TableCell align="right">{props.atksL.skill2}</TableCell>
+            <TableCell align="right">{props.atksC.skill2}</TableCell>
+            <TableCell align="right">{props.atksR.skill2}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">Attr Skill</TableCell>
+            <TableCell align="right">{props.atksL.attr}</TableCell>
+            <TableCell align="right">{props.atksC.attr}</TableCell>
+            <TableCell align="right">{props.atksR.attr}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">All Skill</TableCell>
+            <TableCell align="right">{props.atksL.atk}</TableCell>
+            <TableCell align="right">{props.atksC.atk}</TableCell>
+            <TableCell align="right">{props.atksR.atk}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

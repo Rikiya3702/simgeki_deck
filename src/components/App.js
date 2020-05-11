@@ -240,7 +240,11 @@ class App extends Component {
     <BossSlider label={"ボス撃破"} value={props.bosstime.done} handleChange={props.boss_done}/>
 
     <hr />
-    <CardsTable cards={props.cards} atk={props.atk} />
+    <CardsTable cards={props.cards} atk={props.atk}
+      atksL={getAtk('left', props.cards, props.bosstime, props.boss_attr)}
+      atksC={getAtk('center', props.cards, props.bosstime, props.boss_attr)}
+      atksR={getAtk('right', props.cards, props.bosstime, props.boss_attr)}
+       />
     <h3>合計の攻撃力</h3><h1>[{Math.ceil(props.atk.left + props.atk.center + props.atk.right)}]</h1>
 
     <BossTable atk={props.atk} />
@@ -517,7 +521,16 @@ export const skillName = props => {
   return mes
 }
 
-const getAtk2 = (self, cards, bosstime, boss_attr) => {
+const getAtk = (self, cards, bosstime, boss_attr) => {
+  let atkdata = {
+    atk: 0,
+    attr: 0,
+    alfa: 0,
+    beta: 0,
+    skill2: 0,
+    self: 0
+  }
+
   let alfa = ''
   let beta = ''
   switch(self) {
@@ -538,7 +551,6 @@ const getAtk2 = (self, cards, bosstime, boss_attr) => {
   }
 
   let boss_attack = 100
-
   let self_boost = 0
   let alfa_boost = 0
   let beta_boost = 0
@@ -572,14 +584,22 @@ const getAtk2 = (self, cards, bosstime, boss_attr) => {
       alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
     }
     //selfもbetaもCHAの場合
-    if( cards[self].skill.target === CHA &&
+    if( cards[beta].skill.target === CHA &&
         cards[self].name === cards[beta].name) {
       beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
     }
-    if( cards[self].skill.skill2.boss !== NORMAL){
 
+    atkdata = {
+      atk: Math.round(cards[self].atk * (100+ cards[self].skill.value *boss_attack/100 +skill2 +alfa_boost +beta_boost +attr_boost) )/100,
+      attr: Math.round(cards[self].atk * attr_boost )/100,
+      alfa: Math.round(cards[self].atk * alfa_boost )/100,
+      beta: Math.round(cards[self].atk * beta_boost )/100,
+      skill2: Math.round(cards[self].atk * skill2 )/100,
+      self: Math.round(cards[self].atk * self_boost )/100,
     }
-    return cards[self].atk * (100 + self_boost + alfa_boost + beta_boost + skill2 + attr_boost) /100
+    return atkdata
+
+  //自身がATTACK
   }else {
 
     boss_attack = correctionBosstime(cards[self].skill.boss, bosstime)
@@ -590,11 +610,16 @@ const getAtk2 = (self, cards, bosstime, boss_attr) => {
         case ATK:
           alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
           break
-        case ATR && cards[self].attr === cards[alfa].attr:
-          alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+        case ATR:
+          if(cards[self].attr === cards[alfa].attr) {
+            alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+          }
           break
-        case ATC && cards[self].name === cards[alfa].name:
-          alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+        case ATC:
+        case CHA:
+          if(cards[self].name === cards[alfa].name) {
+            alfa_boost = cards[alfa].skill.value * correctionBosstime(cards[alfa].skill.boss, bosstime) /100
+          }
           break
         default:
           break
@@ -606,11 +631,16 @@ const getAtk2 = (self, cards, bosstime, boss_attr) => {
         case ATK:
           beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
           break
-        case ATR && cards[self].attr === cards[beta].attr:
-          beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+        case ATR:
+          if(cards[self].attr === cards[beta].attr) {
+            beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+          }
           break
-        case ATC && cards[self].name === cards[beta].name:
-          beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+        case ATC:
+        case CHA:
+          if(cards[self].name === cards[beta].name) {
+            beta_boost = cards[beta].skill.value * correctionBosstime(cards[beta].skill.boss, bosstime) /100
+          }
           break
         default:
           break
@@ -624,7 +654,16 @@ const getAtk2 = (self, cards, bosstime, boss_attr) => {
     if(cards[self].name === cards[beta].name) fusion += 1
   }
 
-  return Math.round(cards[self].atk * (100 + cards[self].skill.value *fusion *boss_attack/100 +skill2 +alfa_boost +beta_boost +attr_boost) )/100
+  atkdata = {
+    atk: Math.round(cards[self].atk * (100 + cards[self].skill.value *fusion *boss_attack/100 +skill2 +alfa_boost +beta_boost +attr_boost) )/100,
+    attr: Math.round(cards[self].atk * attr_boost )/100,
+    alfa: Math.round(cards[self].atk * alfa_boost )/100,
+    beta: Math.round(cards[self].atk * beta_boost )/100,
+    skill2: Math.round(cards[self].atk * skill2 )/100,
+    self: Math.round(cards[self].atk * (cards[self].skill.value *fusion *boss_attack/100) )/100,
+  }
+
+  return atkdata
 }
 
 export const atk2Bp = (atk, boss_lv, difficult) => {
@@ -663,9 +702,9 @@ const mapStateToProps = state => ({
   sample: state.input.sample,
   bosstime: state.input.bosstime,
   atk: {
-    left: Math.round(getAtk2('left', state.input.cards, state.input.bosstime, state.input.boss_attr)*10)/10,
-    center: Math.round(getAtk2('center', state.input.cards, state.input.bosstime, state.input.boss_attr)*10)/10,
-    right: Math.round(getAtk2('right', state.input.cards, state.input.bosstime, state.input.boss_attr)*10)/10,
+    left: Math.round(getAtk('left', state.input.cards, state.input.bosstime, state.input.boss_attr).atk *10) /10,
+    center: Math.round(getAtk('center', state.input.cards, state.input.bosstime, state.input.boss_attr).atk *10) /10,
+    right: Math.round(getAtk('right', state.input.cards, state.input.bosstime, state.input.boss_attr).atk*10) /10,
   }
  })
 
