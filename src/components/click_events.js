@@ -10,7 +10,8 @@ const useStyles = makeStyles((theme) => ({
   },
   dropdown: {
     position: 'absolute',
-    maxWidth: 300,
+    maxWidth: 500,
+    minWidth: 300,
     top: 28,
     right: 0,
     left: 0,

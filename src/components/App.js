@@ -116,10 +116,22 @@ class App extends Component {
             subheader="テンプレートから選択してデッキを作成"
             />
           <CardContent >
-            <SelectSkill label="キャラクター名" position="sample" class="cardname" items={select_chars} value={props.sample.name} handleChange={props.card_sample_name} />
-            <Helps content={helpChar}/>
-            <SelectTempSkill label="スキル" class="tempskill" items={card_templete} value={this.state.card_temp_select} handleChange={this.onSelect} />
-            <Helps content={helpSkill}/>
+            <Grid container alignItems="center">
+              <Grid item>
+                <SelectSkill label="キャラクター名" position="sample" class="cardname" items={select_chars} value={props.sample.name} handleChange={props.card_sample_name} />
+              </Grid>
+              <Grid item xs={1}>
+                <Helps content={helpChar}/>
+              </Grid>
+            </Grid>
+            <Grid container alignItems="center">
+              <Grid item>
+                <SelectTempSkill label="スキル" class="tempskill" items={card_templete} value={this.state.card_temp_select} handleChange={this.onSelect} />
+              </Grid>
+              <Grid item xs={1}>
+                <Helps content={helpSkill}/>
+              </Grid>
+            </Grid>
             <CardData card={props.sample} />
           </CardContent>
           <CardActions disableSpacing>
@@ -138,7 +150,6 @@ class App extends Component {
 
         </Card>
       </Grid>
-      <Grid item xs></Grid>
     </Grid>
     <hr />
 
@@ -234,7 +245,7 @@ function CustomCard(props) {
       transform: 'scale(0.8)',
     },
     title: {
-      fontSize: 14,
+      fontSize: 16,
     },
     pos: {
       marginBottom: 12,
@@ -302,36 +313,66 @@ function CustomCard(props) {
   return (
     <Card className={classes.root}>
       <CardContent className={`back-${props.card.attr}`}>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          【{props.position.toUpperCase()}】
-        </Typography>
-        <SelectSkill label="キャラクター名" position={props.position} class="cardname" items={select_chars} value={props.card.name} handleChange={props.cardName} />
-        <InputNumber label="攻撃力" position={props.position} class="atk" value={props.card.atk} handleChange={props.cardAtk} />
-        <div className={`back-${props.card.skill.type}`}>
-          <SelectSkill label="スキルタイプ" position={props.position} class="skilltype" items={skill_items.type} value={props.card.skill.type} handleChange={props.cardSkillType} />
-        </div>
-        <InputNumber label="スキル効果" position={props.position} class="skillvalue" value={props.card.skill.value} handleChange={props.cardSkillValue} />
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12}>
+            <Typography className={classes.title} variant="h2" gutterBottom>
+              【{props.position.toUpperCase()}】
+            </Typography>
+          </Grid>
+        </Grid>
 
-        <SelectSkill label="発動タイミング" position={props.position} class="skillboss" items={skill_items.boss} value={props.card.skill.boss} handleChange={props.cardSkillBoss} />
-        { props.card.skill.type === ATTACK &&
-          <SelectSkill label="フュージョン" position={props.position} class="skillfusion" items={skill_items.fusion} value={props.card.skill.fusion} handleChange={props.cardSkillFusion} />
-        }
-        {props.card.skill.type === BOOST &&
-          <SelectSkill label="ブースト対象" position={props.position} class="skilltarget" items={skill_items.target} value={props.card.skill.target} handleChange={props.cardSkillTarget} />
-        }
+        <Grid container alignItems="center">
+          <Grid item xs>
+            <SelectSkill label="キャラクター名" position={props.position} class="cardname" items={select_chars} value={props.card.name} handleChange={props.cardName} />
+          </Grid>
+          <Grid item xs>
+            <InputNumber label="攻撃力" position={props.position} class="atk" value={props.card.atk} handleChange={props.cardAtk} />
+          </Grid>
+        </Grid>
 
-        <SelectSkill label="追加スキル" position={props.position} class="skillboss2" items={skill_items.boss2} value={props.card.skill.skill2.boss} handleChange={props.cardSkillSkill2} />
-        {props.card.skill.skill2.boss !== NONE &&
-          <InputNumber label="追加スキル効果" position={props.position} class="skillvalue2" value={props.card.skill.skill2.value} handleChange={props.cardSkillValue2} />
-        }
+        <Grid container alignItems="center">
+          <Grid item xs>
+            <div className={`back-${props.card.skill.type}`}>
+              <SelectSkill label="スキルタイプ" position={props.position} class="skilltype" items={skill_items.type} value={props.card.skill.type} handleChange={props.cardSkillType} />
+            </div>
+          </Grid>
+          <Grid item xs>
+            <InputNumber label="スキル効果" position={props.position} class="skillvalue" value={props.card.skill.value} handleChange={props.cardSkillValue} />
+          </Grid>
+        </Grid>
 
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
+        <Grid container alignItems="center">
+          <Grid item xs>
+            <SelectSkill label="発動タイミング" position={props.position} class="skillboss" items={skill_items.boss} value={props.card.skill.boss} handleChange={props.cardSkillBoss} />
+          </Grid>
+          <Grid item xs>
+            { props.card.skill.type === ATTACK &&
+              <SelectSkill label="フュージョン" position={props.position} class="skillfusion" items={skill_items.fusion} value={props.card.skill.fusion} handleChange={props.cardSkillFusion} />
+            }
+            {props.card.skill.type === BOOST &&
+              <SelectSkill label="ブースト対象" position={props.position} class="skilltarget" items={skill_items.target} value={props.card.skill.target} handleChange={props.cardSkillTarget} />
+            }
+          </Grid>
+        </Grid>
+
+        <Grid container alignItems="center">
+          <Grid item xs>
+            <SelectSkill label="追加スキル" position={props.position} class="skillboss2" items={skill_items.boss2} value={props.card.skill.skill2.boss} handleChange={props.cardSkillSkill2} />
+          </Grid>
+          <Grid item xs>
+            {props.card.skill.skill2.boss !== NONE &&
+              <InputNumber label="追加スキル効果" position={props.position} class="skillvalue2" value={props.card.skill.skill2.value} handleChange={props.cardSkillValue2} />
+            }
+          </Grid>
+        </Grid>
+        <hr />
+        <Typography variant="body1" component="p">
+          【{props.position.toUpperCase()}】{props.card.name} [{props.card.attr}]
         </Typography>
         <Typography variant="body2" component="p">
-          【{props.position.toUpperCase()}】{props.card.name} [{props.card.attr}]
-          <br />{skillName(props.card)}
-          <br />{skillInfo(props.card)}
+          {skillName(props.card)}
+          <br />
+          {skillInfo(props.card)}
         </Typography>
       </CardContent>
     </Card>
@@ -341,26 +382,40 @@ function CustomCard(props) {
 const CardData = props => {
   return(
     <React.Fragment>
-      <hr />
-      <table className={`back-${props.card.attr}`}>
-        <thead>
-          <tr><th colSpan="2">【{props.card.name}】({props.card.attr})</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>攻撃力</td>
-            <td>{ props.card.atk }</td>
-          </tr>
-          <tr>
-            <td>スキル</td>
-            <td>{ props.card.skill.type }</td>
-          </tr>
-          <tr>
-            <td>せつめい</td>
-            <td>{ skillInfo(props.card) }</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className={`back-${props.card.attr}`}>
+        <Grid container spacing={2} alignItems="center" >
+          <Grid item xs>
+            <Typography color="textSecondary" gutterBottom>
+              ({props.card.attr})
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              【{props.card.name}】
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography variant="body2" component="p">
+              <br />
+              攻撃力：{ props.card.atk }
+              <br />
+              スキル：{ props.card.skill.type }
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs>
+            <Typography variant="body2" component="p">
+              { skillName(props.card) }
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs>
+            <Typography variant="body2" component="p">
+              { skillInfo(props.card) }
+            </Typography>
+          </Grid>
+        </Grid>
+      </div>
     </React.Fragment>
   )
 }
