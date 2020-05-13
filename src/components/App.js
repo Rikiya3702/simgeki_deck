@@ -12,13 +12,15 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import { AccessAlarm, Help } from '@material-ui/icons'
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import { SelectSkill, SelectBossAttr, SelectTempSkill} from './select.js'
 import InputNumber from './textfield.js'
 import { CardsTable, BossTable } from './table.js'
 import BossSlider from './slider.js'
-import Clickhelp from './click_events.js'
+import { Helps } from './click_events.js'
 
 import './App.scss'
 
@@ -103,10 +105,9 @@ class App extends Component {
         <hr />
       </Grid>
     </header>
-    <Clickhelp />
+    <Helps content={helpAtk}/>
 
     <Grid container alignItems="center" spacing={1}>
-      <h3>templete</h3>
       <Grid item xs></Grid>
       <Grid item xs={12} sm={10} >
         <Card>
@@ -116,7 +117,9 @@ class App extends Component {
             />
           <CardContent >
             <SelectSkill label="キャラクター名" position="sample" class="cardname" items={select_chars} value={props.sample.name} handleChange={props.card_sample_name} />
+            <Helps content={helpChar}/>
             <SelectTempSkill label="スキル" class="tempskill" items={card_templete} value={this.state.card_temp_select} handleChange={this.onSelect} />
+            <Helps content={helpSkill}/>
             <CardData card={props.sample} />
           </CardContent>
           <CardActions disableSpacing>
@@ -362,6 +365,60 @@ const CardData = props => {
   )
 }
 
+const helpChar = () => {
+  return(
+    <React.Fragment>
+      <Typography variant="body2" gutterBottom>
+      ・キャラ名は表示と属性、フュージョン計算のみに影響します。
+      <br />・ユニット型ブーストなどの自分以外の指定キャラが発動条件のスキルシミュレートは未実装です。
+      <br />
+      </Typography>
+    </React.Fragment>
+  )
+}
+const helpSkill = () => {
+  return(
+    <React.Fragment>
+      <List dense>
+        <ListItem>
+          <ListItemText primary="ノーダメ・まんたん・トラストなどの条件は100%満たしているとして計算します。" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="[キャラ名]ブーストは[ATTACK]指定がない場合、自身もブーストが乗ります。" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="ユニット型ブーストなどの自分以外の指定キャラが発動条件のスキルシミュレートは未実装です。" />
+        </ListItem>
+      </List>
+    </React.Fragment>
+  )
+}
+const helpAtk = () => {
+  return(
+    <React.Fragment>
+      <Typography variant="body2" gutterBottom>
+      攻撃力
+      <br />Lv.50 - Lv.55 - Lv.60 - Lv.65 - 超開花 の数値
+      <br />SSR、SRにおいて、CD付属やコラボ系は-5の値です
+      <br />
+      <br />【SSR】デイドリ・SUMMER以降
+      <br />262 - 285 - 300 - 312 - 327
+      <br />【SSR】SUMMER以前ガチャ産
+      <br />257 - 280 - 295 - 317 - 322
+      <br />【SR+】
+      <br />240 - 263 - 278 - 290 - 300
+      <br />【SR】
+      <br />227 - 242 - 257 - 272 - 287
+      <br />【R】
+      <br />197 - 212 - 227 - 242 - 257
+      <br />【N】
+      <br />197 - 212 - 227 - 242 - 257
+      <br />272 - 287 - 302 - 317 - 332 - 347
+      <br />
+      </Typography>
+    </React.Fragment>
+  )
+}
 const getAtk = (self, cards, bosstime, boss_attr) => {
   let atkdata = {
     atk: 0,

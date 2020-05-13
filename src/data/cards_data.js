@@ -13,7 +13,7 @@ import {
 } from '../reducers/input.js'
 
 export default [
-  { label: '【N】★★★★★★★★★★ (親密度Lv.600)',
+  { label: '【N】★★★★★★★★★★★ (親密度Lv.600)',
     data:{
       atk: 347,
       skill: {
@@ -22,6 +22,38 @@ export default [
         fusion: false,
         target: NONE,
         value: 25,
+        skill2: {
+          boss: NONE,
+          value: 0
+        }
+      }
+    }
+  },
+  { label: '【N】★★★★★★★★★★☆ (親密度Lv.500)',
+    data:{
+      atk: 332,
+      skill: {
+        type: ATTACK,
+        boss: BOSS,
+        fusion: false,
+        target: NONE,
+        value: 5,
+        skill2: {
+          boss: NONE,
+          value: 0
+        }
+      }
+    }
+  },
+  { label: '【N】★★★★★★★★★☆☆ (親密度Lv.400)',
+    data:{
+      atk: 317,
+      skill: {
+        type: ATTACK,
+        boss: BOSS,
+        fusion: false,
+        target: NONE,
+        value: 5,
         skill2: {
           boss: NONE,
           value: 0
