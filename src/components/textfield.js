@@ -1,6 +1,6 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react'
+import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,10 +9,10 @@ const useStyles = makeStyles((theme) => ({
       width: '12ch',
     },
   },
-}));
+}))
 
 export default function FormPropsTextFields(props) {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -30,5 +30,5 @@ export default function FormPropsTextFields(props) {
         />
       </div>
     </form>
-  );
+  )
 }

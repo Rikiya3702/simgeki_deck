@@ -1,25 +1,22 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
 import { skillName, atk2Bp } from './App.js'
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: 350,
   },
-  tc: {
-    maxWidth: 250,
-  },
-});
+})
 
 export function CardsTable(props) {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <TableContainer component={Paper}>
@@ -27,68 +24,68 @@ export function CardsTable(props) {
         <TableHead>
           <TableRow>
             <TableCell align="right"></TableCell>
-            <TableCell align="right" className={classes.tc} >LEFT</TableCell>
-            <TableCell align="right" className={classes.tc} >CENTER</TableCell>
-            <TableCell align="right" className={classes.tc} >RIGHT</TableCell>
+            <TableCell align="right">LEFT</TableCell>
+            <TableCell align="right">CENTER</TableCell>
+            <TableCell align="right">RIGHT</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell align="right">Name</TableCell>
+            <TableCell align="right">名前</TableCell>
             <TableCell align="right">{props.cards.left.name}</TableCell>
             <TableCell align="right">{props.cards.center.name}</TableCell>
             <TableCell align="right">{props.cards.right.name}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">ATK</TableCell>
+            <TableCell align="right">攻撃力</TableCell>
             <TableCell align="right">{props.cards.left.atk}</TableCell>
             <TableCell align="right">{props.cards.center.atk}</TableCell>
             <TableCell align="right">{props.cards.right.atk}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Skill</TableCell>
+            <TableCell align="right">スキル</TableCell>
             <TableCell align="right">{props.cards.left.skill.type}</TableCell>
             <TableCell align="right">{props.cards.center.skill.type}</TableCell>
             <TableCell align="right">{props.cards.right.skill.type}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Skill info</TableCell>
+            <TableCell align="right">スキル効果</TableCell>
             <TableCell align="right">{skillName(props.cards.left)}</TableCell>
             <TableCell align="right">{skillName(props.cards.center)}</TableCell>
             <TableCell align="right">{skillName(props.cards.right)}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Self Skill</TableCell>
+            <TableCell align="right">自スキル効果値</TableCell>
             <TableCell align="right">{props.atksL.self}</TableCell>
             <TableCell align="right">{props.atksC.self}</TableCell>
             <TableCell align="right">{props.atksR.self}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Alfa Skill</TableCell>
+            <TableCell align="right">ブースト１効果値</TableCell>
             <TableCell align="right">{props.atksL.alfa}</TableCell>
             <TableCell align="right">{props.atksC.alfa}</TableCell>
             <TableCell align="right">{props.atksR.alfa}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Beta Skill</TableCell>
+            <TableCell align="right">ブースト２効果値</TableCell>
             <TableCell align="right">{props.atksL.beta}</TableCell>
             <TableCell align="right">{props.atksC.beta}</TableCell>
             <TableCell align="right">{props.atksR.beta}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Skill2</TableCell>
+            <TableCell align="right">追加スキル効果値</TableCell>
             <TableCell align="right">{props.atksL.skill2}</TableCell>
             <TableCell align="right">{props.atksC.skill2}</TableCell>
             <TableCell align="right">{props.atksR.skill2}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">Attr Skill</TableCell>
+            <TableCell align="right">属性ボーナス値</TableCell>
             <TableCell align="right">{props.atksL.attr}</TableCell>
             <TableCell align="right">{props.atksC.attr}</TableCell>
             <TableCell align="right">{props.atksR.attr}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell align="right">All Skill</TableCell>
+            <TableCell align="right">最終攻撃力</TableCell>
             <TableCell align="right">{props.atksL.atk}</TableCell>
             <TableCell align="right">{props.atksC.atk}</TableCell>
             <TableCell align="right">{props.atksR.atk}</TableCell>
@@ -96,11 +93,11 @@ export function CardsTable(props) {
         </TableBody>
       </Table>
     </TableContainer>
-  );
+  )
 }
 
 export function BossTable(props) {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <TableContainer component={Paper}>
@@ -127,10 +124,22 @@ export function BossTable(props) {
             <TableCell align="right">{atk2Bp(props.atk, 10, 1.25)}</TableCell>
           </TableRow>
           <TableRow>
+            <TableCell align="right">30</TableCell>
+            <TableCell align="right">{atk2Bp(props.atk, 30, 1.15)}</TableCell>
+            <TableCell align="right">{atk2Bp(props.atk, 30, 1.2)}</TableCell>
+            <TableCell align="right">{atk2Bp(props.atk, 30, 1.25)}</TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell align="right">50</TableCell>
             <TableCell align="right">{atk2Bp(props.atk, 50, 1.15)}</TableCell>
             <TableCell align="right">{atk2Bp(props.atk, 50, 1.2)}</TableCell>
             <TableCell align="right">{atk2Bp(props.atk, 50, 1.25)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right">60</TableCell>
+            <TableCell align="right">{atk2Bp(props.atk, 60, 1.15)}</TableCell>
+            <TableCell align="right">{atk2Bp(props.atk, 60, 1.2)}</TableCell>
+            <TableCell align="right">{atk2Bp(props.atk, 60, 1.25)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell align="right">70</TableCell>
@@ -141,5 +150,5 @@ export function BossTable(props) {
         </TableBody>
       </Table>
     </TableContainer>
-  );
+  )
 }

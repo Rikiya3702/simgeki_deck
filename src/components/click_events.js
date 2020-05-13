@@ -1,6 +1,8 @@
 import React from 'react';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { AccessAlarm, Help } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ClickAway() {
+export default function Clickhelp() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -33,9 +35,9 @@ export default function ClickAway() {
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div className={classes.root}>
-        <button type="button" onClick={handleClick}>
-          攻撃力
-        </button>
+        <IconButton onClick={handleClick}>
+          <Help />
+        </IconButton>
         {open ? (
           <div className={classes.dropdown}>
             カードLvが最大の時の攻撃力

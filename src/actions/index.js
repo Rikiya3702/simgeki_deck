@@ -16,6 +16,7 @@ export const BOSS_ENTER = "BOSS_ENTER"
 export const BOSS_DONE = "BOSS_DONE"
 export const BOSS_LV = "BOSS_LV"
 export const BOSS_ATTR = "BOSS_ATTR"
+export const INPUT_TSCORE = "INPUT_TSCORE"
 
 export const card_atk = (position, value) => ({
   type: CARD_ATK,
@@ -89,11 +90,15 @@ export const boss_done = (value) => ({
   type: BOSS_DONE,
   value: value
 })
-export const boss_lv = (value) => ({
+export const input_boss_lv = (value) => ({
   type: BOSS_LV,
   value: value
 })
-export const boss_attr = (value) => ({
+export const input_boss_attr = (value) => ({
   type: BOSS_ATTR,
+  value: value
+})
+export const input_tscore = (value) => ({
+  type: INPUT_TSCORE,
   value: value
 })

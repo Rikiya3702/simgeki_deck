@@ -15,7 +15,8 @@ import {
   BOSS_ENTER,
   BOSS_DONE,
   BOSS_LV,
-  BOSS_ATTR
+  BOSS_ATTR,
+  INPUT_TSCORE
 } from '../actions'
 
 import {
@@ -50,6 +51,7 @@ export const AQUA = 'AQUA'
 const MAX_ATK_VALUE = 999
 const MAX_SKILL_VALUE = 99
 const MAX_BOSS_LV = 70
+const MAX_TSCORE = 1010000
 
 const updateMessage = () =>{
   let mes = []
@@ -98,6 +100,10 @@ ATACCKかつキャラの攻撃力％アップ（全部・ボス・先制・追�
       boss: null,
       value: null
     }
+
+Vocal Collection系カード
+［ハッピー・ゴー・ラウンド］藍原椿
+［ア・ゲ・ル♡］柏木美亜
 ------------------------------------------------
  */
 const initialCard = {
@@ -380,6 +386,11 @@ export default (state = initialState, action) => {
     case BOSS_ATTR:
       return {...state,
         boss_attr: action.value
+      }
+
+    case INPUT_TSCORE:
+      return {...state,
+        tscore: validate(action.value, MAX_TSCORE)
       }
 
     default:
