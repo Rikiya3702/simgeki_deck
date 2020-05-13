@@ -9,8 +9,14 @@ import {
   CARD_SKILL_SKILL2,
   CARD_SKILL_VALUE,
   CARD_SKILL2_VALUE,
+  CARD_SAMPLE,
+  CARD_SAMPLE_NAME,
+  CARD_SAMPLE_SKILL,
   BOSS_ENTER,
-  BOSS_DONE
+  BOSS_DONE,
+  BOSS_LV,
+  BOSS_ATTR,
+  INPUT_TSCORE
 } from '../actions'
 
 import {
@@ -19,7 +25,8 @@ import {
   HARUNA, AYAKA,
   KOBOSHI, SAKI,
   AKANE, KAEDE, ARISU,
-  CHINATSU, TSUMUGI, MIA
+  CHINATSU, TSUMUGI, MIA,
+  ONNEKO_FIRE, ONNEKO_LEAF, ONNEKO_AQUA
 } from '../data/character_names.js'
 
 export const TEMPLETE = 'TEMPLETE'
@@ -41,10 +48,10 @@ export const FIRE = 'FIRE'
 export const LEAF = 'LEAF'
 export const AQUA = 'AQUA'
 
-
-
 const MAX_ATK_VALUE = 999
 const MAX_SKILL_VALUE = 99
+const MAX_BOSS_LV = 70
+const MAX_TSCORE = 1010000
 
 const updateMessage = () =>{
   let mes = []
@@ -93,51 +100,51 @@ ATACCKかつキャラの攻撃力％アップ（全部・ボス・先制・追�
       boss: null,
       value: null
     }
+
+Vocal Collection系カード
+［ハッピー・ゴー・ラウンド］藍原椿
+［ア・ゲ・ル♡］柏木美亜
 ------------------------------------------------
  */
 const initialCard = {
-  atk: 317,
+  atk: 320,
   name: AKARI,
   attr: FIRE,
   skill: {
-    type: BOOST,
+    type: ATTACK,
     boss: BOSS,
     fusion: false,
-    target: ATR,
+    target: NONE,
     value: 20,
     skill2: {
-      boss: null,
-      value: 0
+      boss: BOSS,
+      value: 5
     }
   }
 }
 const initialCardLeft = Object.assign({}, initialCard,{
-  name: AOI,
-  attr: AQUA,
   skill: {
     type: ATTACK,
-    boss: SENSEI,
+    boss: NORMAL,
     fusion: false,
-    target:null,
-    value: 20,
+    target: NONE,
+    value: 15,
     skill2: {
-      boss: null,
+      boss: NONE,
       value: 0
     }
   }
 })
 const initialCardRight = Object.assign({}, initialCard,{
-  name: YUZU,
-  attr: LEAF,
   skill: {
-    type: ATTACK,
-    boss: null,
-    fusion: true,
-    target:null,
-    value: 6,
+    type: BOOST,
+    boss: NORMAL,
+    fusion: false,
+    target: ATR,
+    value: 10,
     skill2: {
-      boss: BOSS,
-      value: 2
+      boss: NONE,
+      value: 0
     }
   }
 })
@@ -145,11 +152,17 @@ const initialState = {  mes: ['ようこそ'],
                         updated: updateMessage(),
                         cards: {  left : initialCardLeft,
                                   center: initialCard,
-                                  right: initialCardRight,
+                                  right: initialCardRight
                                 },
+                        sample: initialCard,
                         bosstime: { enter: 50,
                                     done: 60
-                                  }
+                                  },
+                        boss_lv: 1,
+                        boss_attr: LEAF,
+                        tscore: 1010000,
+                        note_coe: 1.2
+
                       }
 
 const validate = (value, max) => {
@@ -189,6 +202,7 @@ const getChar2Attr = char => {
     case HARUNA:
     case AKANE:
     case MIA:
+    case ONNEKO_FIRE:
       return FIRE
     case AOI:
     case RIO:
@@ -196,12 +210,14 @@ const getChar2Attr = char => {
     case SAKI:
     case ARISU:
     case TSUMUGI:
+    case ONNEKO_AQUA:
       return AQUA
     case YUZU:
     case TSUBAKI:
     case KOBOSHI:
     case KAEDE:
     case CHINATSU:
+    case ONNEKO_LEAF:
       return LEAF
     default:
   }
@@ -317,8 +333,9 @@ export default (state = initialState, action) => {
     case CARD_SKILL2_VALUE:
       new_card = Object.assign({}, state.cards[action.position] ,{
           skill: Object.assign({}, state.cards[action.position].skill ,{
-              skill2: Object.assign({}, state.cards[action.position].skill2 ,{
-                  value: validate(action.value, MAX_SKILL_VALUE)
+              skill2: Object.assign({}, state.cards[action.position].skill.skill2 ,{
+                  value: validate(action.value, MAX_SKILL_VALUE),
+                  boss: state.cards[action.position].skill.skill2.boss
               })
           })
       })
@@ -326,6 +343,30 @@ export default (state = initialState, action) => {
                 cards: {...state.cards,
                   [action.position]: new_card
               }}
+
+    case CARD_SAMPLE:
+      new_card = {...state.sample,
+                    atk: action.value.atk,
+                    skill: action.value.skill
+                  }
+      return {...state ,
+                cards: {...state.cards,
+                  [action.position]: new_card
+              }}
+
+    case CARD_SAMPLE_NAME:
+      new_card = {...state.sample,
+                    name: action.value,
+                    attr: getChar2Attr( action.value),
+                  }
+      return {...state , sample: new_card }
+
+    case CARD_SAMPLE_SKILL:
+      new_card = {...state.sample,
+                    atk: action.value.atk,
+                    skill: action.value.skill
+                  }
+      return {...state , sample: new_card }
 
     case BOSS_ENTER:
       return {...state,
@@ -335,6 +376,21 @@ export default (state = initialState, action) => {
     case BOSS_DONE:
       return {...state,
         bosstime: validateDone({ done: action.value, enter: state.bosstime.enter }),
+      }
+
+    case BOSS_LV:
+      return {...state,
+        boss_lv: validate(action.value, MAX_BOSS_LV)
+      }
+
+    case BOSS_ATTR:
+      return {...state,
+        boss_attr: action.value
+      }
+
+    case INPUT_TSCORE:
+      return {...state,
+        tscore: validate(action.value, MAX_TSCORE)
       }
 
     default:
