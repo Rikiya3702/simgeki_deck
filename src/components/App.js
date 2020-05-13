@@ -214,6 +214,13 @@ class App extends Component {
         <BossSlider label="ボスレベル" class="bosslv" marks="lv" step={1} min={1} max={70} value={props.boss.lv} handleChange={props.input_boss_lv}/>
         <BossSlider label="ボス出現タイミング" class="bossenter" marks="boss" step={1} min={0} max={100} value={props.bosstime.enter} handleChange={props.boss_enter}/>
         <BossSlider label="ボス撃破タイミング" class="bossdone" marks="boss" step={1} min={0} max={100} value={props.bosstime.done} handleChange={props.boss_done}/>
+        <h3>
+          OverDamage:{getOd(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore)}%
+        </h3>
+        <h3>
+          倒れたオンネコ:{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).count}体
+          と{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).par}%
+        </h3>
       </CardContent>
     </Card>
     <hr />
@@ -619,6 +626,34 @@ const getAtk = (self, cards, bosstime, boss_attr) => {
   return atkdata
 }
 
+const getOd = (atk, lv, tscore) => {
+  let hp = 6500
+  if( lv >= 2 &&
+      lv < 11) {
+    hp = 7050 + 450 * lv
+  }else{
+    hp = 4550 + 700 * lv
+  }
+
+  return Math.floor((atk *50 - hp) * ( tscore / 1010000 ))/100
+}
+const getOn = (atk, lv, tscore) => {
+  let hp = 6500
+  let mhp = atk*100
+  let count = 1
+
+  if( lv >= 2 &&
+      lv < 11) {
+    hp = 7050 + 450 * lv
+  }else{
+    hp = 4550 + 700 * lv
+  }
+
+  while( atk*100 >= (hp * 2 ** (count - 1)) ) {
+    count++
+  }
+  return { count: count, par: Math.floor( atk*100 / (hp * 2 ** (count - 1))*100 ) }
+}
 const correctionBosstime = (boss, bosstime) => {
   switch(boss) {
     case BOSS:
