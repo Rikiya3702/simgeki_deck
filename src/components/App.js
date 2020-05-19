@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 
-import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
@@ -12,15 +11,22 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import IconButton from '@material-ui/core/IconButton'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Brightness5Icon from '@material-ui/icons/Brightness5'
+import DoubleArrowIcon from '@material-ui/icons/DoubleArrow'
+import StarBorderIcon from '@material-ui/icons/StarBorder'
+import clsx from 'clsx'
 
 import { SelectSkill, SelectBossAttr, SelectTempSkill} from './select.js'
 import InputNumber from './textfield.js'
 import { CardsTable, BossTable } from './table.js'
 import BossSlider from './slider.js'
-import { Helps } from './click_events.js'
+import { Helps, HelpButton } from './click_events.js'
 
 import './App.scss'
 
@@ -73,10 +79,14 @@ class App extends Component {
       card_temp_select: 0,
     }
     this.onSelect = this.onSelect.bind(this);
+    this.onSampleSet = this.onSampleSet.bind(this);
   }
   onSelect = (e) => {
     this.setState( {card_temp_select: e.key} )
     this.props.card_sample_skill(card_templete[e.key].data)
+  }
+  onSampleSet = ( position, data) => {
+    this.props.card_sample(position, data)
   }
 
   render(){
@@ -105,17 +115,18 @@ class App extends Component {
         <hr />
       </Grid>
     </header>
-    <Helps content={helpAtk}/>
 
     <Grid container alignItems="center" spacing={1}>
       <Grid item xs></Grid>
       <Grid item xs={12} sm={10} >
         <Card>
-          <CardHeader
-            title="カード テンプレート"
-            subheader="テンプレートから選択してデッキを作成"
-            />
+          <CardHeader title="カード テンプレート" className="back-head"/>
           <CardContent >
+            <Typography variant="body2" color="textSecondary" gutterBottom component="p">
+              テンプレートから選択してデッキを作成<br />
+              攻撃力・スキル等は全てカスタムできます<br />
+            </Typography>
+            <hr />
             <Grid container alignItems="center">
               <Grid item>
                 <SelectSkill label="キャラクター名" position="sample" class="cardname" items={select_chars} value={props.sample.name} handleChange={props.card_sample_name} />
@@ -132,9 +143,22 @@ class App extends Component {
                 <Helps content={helpSkill}/>
               </Grid>
             </Grid>
-            <CardData card={props.sample} />
+            <Grid container alignItems="center" spacing={1}>
+              <Grid item xs>
+                <CardData card={props.sample} />
+              </Grid>
+            </Grid>
+            <Grid container alignItems="center" spacing={1}>
+              <Grid item >
+                <Typography variant="body2" gutterBottom component="p">
+                  ボタンを押すと上記のテンプレートをデッキにセットします。<br />
+                  上書きしますので気をつけて下さい。<br />
+                </Typography>
+              </Grid>
+            </Grid>
           </CardContent>
           <CardActions disableSpacing>
+
             <Grid container justify="space-evenly" alignItems="center" spacing={1}>
               <Grid item >
                 <Button variant="contained" onClick={ () => props.card_sample('left', card_templete[this.state.card_temp_select].data) }>LEFTにセット</Button>
@@ -150,6 +174,7 @@ class App extends Component {
 
         </Card>
       </Grid>
+      <Grid item xs></Grid>
     </Grid>
     <hr />
 
@@ -205,35 +230,54 @@ class App extends Component {
     </Grid>
     <hr />
 
-    <Card>
-      <CardContent className={`back-${props.boss.attr}`}>
-        <h1>ボス情報</h1>
-        <SelectBossAttr label="属性" class="bossattr" items={attrs} value={props.boss.attr} handleChange={props.input_boss_attr} />
+    <Grid container alignItems="center" spacing={1}>
+      <Grid item xs></Grid>
+      <Grid item xs={12} sm={10} >
+        <Card>
+          <CardHeader title="ボス情報" className="back-head" />
+          <CardContent className={`back-${props.boss.attr}`}>
+            <SelectBossAttr label="属性" class="bossattr" items={attrs} value={props.boss.attr} handleChange={props.input_boss_attr} />
 
-        <BossSlider label="テクニカルスコア" class="tscore" marks="tscore" step={100} min={970000} max={1010000} value={props.tscore} handleChange={props.input_tscore}/>
-        <BossSlider label="ボスレベル" class="bosslv" marks="lv" step={1} min={1} max={70} value={props.boss.lv} handleChange={props.input_boss_lv}/>
-        <BossSlider label="ボス出現タイミング" class="bossenter" marks="boss" step={1} min={0} max={100} value={props.bosstime.enter} handleChange={props.boss_enter}/>
-        <BossSlider label="ボス撃破タイミング" class="bossdone" marks="boss" step={1} min={0} max={100} value={props.bosstime.done} handleChange={props.boss_done}/>
-        <h3>
-          OverDamage:{getOd(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore)}%
-        </h3>
-        <h3>
-          倒れたオンネコ:{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).count}体
-          と{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).par}%
-        </h3>
-      </CardContent>
-    </Card>
+            <Helps content={helpTscore}/>
+            <Helps content={helpBosstime}/>
+
+            <BossSlider label="テクニカルスコア" class="tscore" marks="tscore" step={100} min={940000} max={1010000} value={props.tscore} handleChange={props.input_tscore}/>
+            <BossSlider label="ボスレベル" class="bosslv" marks="lv" step={1} min={1} max={70} value={props.boss.lv} handleChange={props.input_boss_lv}/>
+            <BossSlider label="ボス出現タイミング" class="bossenter" marks="boss" step={1} min={0} max={100} value={props.bosstime.enter} handleChange={props.boss_enter}/>
+            <BossSlider label="ボス撃破タイミング" class="bossdone" marks="boss" step={1} min={0} max={100} value={props.bosstime.done} handleChange={props.boss_done}/>
+            <h3>
+              OverDamage:{getOd(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore)}%
+            </h3>
+            <h3>
+              倒れたオンネコ:{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).count}体
+              と{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).par}%
+            </h3>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs></Grid>
+    </Grid>
     <hr />
 
-    <hr />
-    <CardsTable cards={props.cards} atk={props.atk}
-      atksL={getAtk('left', props.cards, props.bosstime, props.boss.attr)}
-      atksC={getAtk('center', props.cards, props.bosstime, props.boss.attr)}
-      atksR={getAtk('right', props.cards, props.bosstime, props.boss.attr)}
-       />
-     <h3>デッキの総攻撃力</h3><h1>[{Math.ceil(props.atk.left + props.atk.center + props.atk.right)}]</h1>
-
-    <BossTable atk={props.atk} />
+    <Grid container alignItems="center" spacing={1}>
+      <Grid item xs></Grid>
+      <Grid item xs={12} sm={10} md={8}>
+        <CardsTable cards={props.cards} atk={props.atk}
+          atksL={getAtk('left', props.cards, props.bosstime, props.boss.attr)}
+          atksC={getAtk('center', props.cards, props.bosstime, props.boss.attr)}
+          atksR={getAtk('right', props.cards, props.bosstime, props.boss.attr)}
+           />
+       </Grid>
+     <Grid item xs></Grid>
+   </Grid>
+   <h3>デッキの総攻撃力</h3><h1>[{Math.ceil(props.atk.left + props.atk.center + props.atk.right)}]</h1>
+   <Grid container alignItems="center" spacing={1}>
+     <Grid item xs></Grid>
+     <Grid item xs={12} sm={10} md={8}>
+       <BossTable atk={props.atk} />
+      </Grid>
+      <Grid item xs></Grid>
+    </Grid>
     </Container>
   </div>
 </React.Fragment>
@@ -246,16 +290,19 @@ function CustomCard(props) {
     root: {
       minWidth: 275,
     },
-    bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-    },
     title: {
       fontSize: 16,
     },
     pos: {
       marginBottom: 12,
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: '0.5s',
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
     },
   });
   const classes = useStyles();
@@ -316,17 +363,24 @@ function CustomCard(props) {
       }
     ]
   }
+  const [expanded, setExpanded] = React.useState(false);
 
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
   return (
     <Card className={classes.root}>
+      <CardHeader title={`${props.position.toUpperCase()}`} className="back-head" />
       <CardContent className={`back-${props.card.attr}`}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12}>
-            <Typography className={classes.title} variant="h2" gutterBottom>
-              【{props.position.toUpperCase()}】
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="body1" component="p">
+          【{props.card.attr}】 {props.card.name}
+        </Typography>
+        <Typography variant="body2" component="p">
+          {skillName(props.card)}
+          <br />
+          {skillInfo(props.card)}
+        </Typography>
+        <hr />
 
         <Grid container alignItems="center">
           <Grid item xs>
@@ -372,15 +426,34 @@ function CustomCard(props) {
             }
           </Grid>
         </Grid>
-        <hr />
-        <Typography variant="body1" component="p">
-          【{props.position.toUpperCase()}】{props.card.name} [{props.card.attr}]
-        </Typography>
-        <Typography variant="body2" component="p">
-          {skillName(props.card)}
-          <br />
-          {skillInfo(props.card)}
-        </Typography>
+
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expanded,
+          })}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          <ExpandMoreIcon />
+        </IconButton>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <HelpButton label="Atkについて" content={helpAtk} />
+            <Button>Skill</Button>
+            <Button>Char</Button>
+            <Helps content={helpChar}/>
+
+            <Typography paragraph>Method:</Typography>
+            <Typography paragraph>
+              Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
+              minutes.
+            </Typography>
+            <Typography>
+              Set aside off of the heat to let rest for 10 minutes, and then serve.
+            </Typography>
+          </CardContent>
+        </Collapse>
       </CardContent>
     </Card>
   );
@@ -388,53 +461,59 @@ function CustomCard(props) {
 
 const CardData = props => {
   return(
-    <React.Fragment>
+    <Card>
       <div className={`back-${props.card.attr}`}>
-        <Grid container spacing={2} alignItems="center" >
-          <Grid item xs>
-            <Typography color="textSecondary" gutterBottom>
-              ({props.card.attr})
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              【{props.card.name}】
-            </Typography>
+        <CardContent>
+          <Grid container spacing={2} alignItems="center" >
+            <Grid item xs>
+              <Typography color="textSecondary" gutterBottom>
+                ({props.card.attr})
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                【{props.card.name}】
+              </Typography>
+            </Grid>
+            <Grid item xs>
+              <Typography variant="body2" component="p">
+                <br />
+                攻撃力：{ props.card.atk }
+                <br />
+                スキル：{ props.card.skill.type }
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs>
-            <Typography variant="body2" component="p">
-              <br />
-              攻撃力：{ props.card.atk }
-              <br />
-              スキル：{ props.card.skill.type }
-            </Typography>
+          <Typography variant="body2" component="p">
+            { skillName(props.card) }
+          </Typography>
+
+          <Grid container spacing={2} alignItems="left">
+            <Grid item xs={2}>
+              <SkillIcon type={props.card.skill.type} />
+            </Grid>
+            <Grid item xs>
+              <Typography variant="body2" component="p">
+
+                { skillInfo(props.card) }
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
-            <Typography variant="body2" component="p">
-              { skillName(props.card) }
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
-            <Typography variant="body2" component="p">
-              { skillInfo(props.card) }
-            </Typography>
-          </Grid>
-        </Grid>
+        </CardContent>
       </div>
-    </React.Fragment>
+    </Card>
   )
 }
 
 const helpChar = () => {
   return(
     <React.Fragment>
-      <Typography variant="body2" gutterBottom>
-      ・キャラ名は表示と属性、フュージョン計算のみに影響します。
-      <br />・ユニット型ブーストなどの自分以外の指定キャラが発動条件のスキルシミュレートは未実装です。
-      <br />
-      </Typography>
+      <List dense>
+        <ListItem>
+          <ListItemText primary="キャラ名は表示と属性、フュージョン計算のみに影響します。" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="ユニット系ブーストなどの自分以外の指定キャラが発動条件となるスキルシミュレートは未実装です。" />
+        </ListItem>
+      </List>
     </React.Fragment>
   )
 }
@@ -478,6 +557,84 @@ const helpAtk = () => {
       <br />272 - 287 - 302 - 317 - 332 - 347
       <br />
       </Typography>
+    </React.Fragment>
+  )
+}
+const helpCard = () => {
+  return(
+    <React.Fragment>
+      <Typography variant="body2" gutterBottom>
+      カードについて
+      <br />
+
+      </Typography>
+      <List dense>
+        <ListItem>
+          <ListItemText primary="ノーダメ・まんたん・トラストなどの条件は100%満たしているとして計算します。" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="[キャラ名]ブーストは[ATTACK]指定がない場合、自身もブーストが乗ります。" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="ユニット型ブーストなどの自分以外の指定キャラが発動条件のスキルシミュレートは未実装です。" />
+        </ListItem>
+      </List>
+    </React.Fragment>
+  )
+}
+const helpTscore = () => {
+  return(
+    <React.Fragment>
+      <Typography variant="body2" gutterBottom>
+        1,010,000を単純に100%としてBP、ODの計算結果に補正をかけます。
+        <br />
+        テクニカルスコアとバトルスコアは計算式が全然違うので参考程度にして下さい。
+      </Typography>
+    </React.Fragment>
+  )
+}
+const helpBosstime = () => {
+  return(
+    <React.Fragment>
+      <Typography variant="body2" gutterBottom>
+        ボスの出現タイミングを指定します。
+        <br />
+        ボス●●スキルや、ODの計算に影響します。
+        <br />
+        例えば50%の場合、1500ノーツの曲では751ノーツ以降からボス系スキルが適用されます。
+        <br />
+        撃破タイミングは追撃スキルのみに影響します。
+        <br />
+        （撃破タイミングは攻撃力とボスレベルから計算できるかも・・・？）
+      </Typography>
+    </React.Fragment>
+  )
+}
+
+const SkillIcon = (props) => {
+  return(
+    <React.Fragment>
+      { props.type === ATTACK &&
+        <Card className="skill-icon">
+          <div className="skill-icon-content">
+            <div className="star1">
+              <StarBorderIcon fontSize="large" htmlColor="yellow"/>
+              <div className="star2"><StarBorderIcon fontSize="large"  htmlColor="yellow"/></div>
+            </div>
+            <span className="c-attack">ATTACK</span>
+          </div>
+        </Card>
+      }
+      { props.type === BOOST &&
+        <Card className="skill-icon">
+          <div className="skill-icon-content">
+            <div className="dallow">
+              <DoubleArrowIcon fontSize="large"  htmlColor="red"/>
+            </div>
+            <span className="c-boost">BOOST</span>
+          </div>
+        </Card>
+      }
     </React.Fragment>
   )
 }
@@ -793,7 +950,7 @@ export const atk2Bp = (atk, boss_lv, difficult) => {
   let bp = 0
   const tscore = 1
   const bs_coe = (199 + boss_lv) *100 /3 *difficult
-  const note_coe = 1
+  const note_coe = 0.95
 
   bp += atk.left * tscore * bs_coe * note_coe
   bp += atk.center * tscore * bs_coe * note_coe

@@ -4,6 +4,10 @@ body{
 .d-none{
   display: none;
 }
+.back-head{
+  background: rgba(100, 100, 100, 0.9);
+  color: #fff;
+}
 .back-FIRE{
   background: rgba(255, 100, 100, 0.3);
 }
@@ -19,4 +23,37 @@ body{
 }
 .back-BOOST{
   background: rgba(230, 100, 100, 1);
+}
+.c-attack{
+  color: rgb(230, 230, 100);
+}
+.c-boost{
+  color: rgb(230, 100, 100);
+}
+
+.skill-icon{
+  position: relative;
+  max-width: 40px;
+  font-size: 9px;
+  font-weight: bold;
+}
+.skill-icon-content{
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+.star1{
+  position: relative;
+}
+.star2{
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-45deg);
+}
+.dallow{
+  position: relative;
+  top: 4px;
+  left: 0;
+  transform: rotate(-90deg);
 }
