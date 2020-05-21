@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
-import { skillName, atk2Bp } from './App.js'
+import { skillName, atk2Bp, SkillIcon } from './App.js'
 
 const useStyles = makeStyles({
   table: {
@@ -52,9 +52,9 @@ export function CardsTable(props) {
           </TableRow>
           <TableRow>
             <TableCell align="right">スキル</TableCell>
-            <TableCell align="right">{props.cards.left.skill.type}</TableCell>
-            <TableCell align="right">{props.cards.center.skill.type}</TableCell>
-            <TableCell align="right">{props.cards.right.skill.type}</TableCell>
+            <TableCell align="right"><SkillIcon type={props.cards.left.skill.type} /></TableCell>
+            <TableCell align="right"><SkillIcon type={props.cards.center.skill.type} /></TableCell>
+            <TableCell align="right"><SkillIcon type={props.cards.right.skill.type} /></TableCell>
           </TableRow>
           <TableRow>
             <TableCell align="right">スキル効果</TableCell>

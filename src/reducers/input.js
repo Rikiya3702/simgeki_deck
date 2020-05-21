@@ -107,7 +107,7 @@ Vocal Collection系カード
 ------------------------------------------------
  */
 const initialCard = {
-  atk: 320,
+  atk: 347,
   name: AKARI,
   attr: FIRE,
   skill: {
@@ -115,20 +115,21 @@ const initialCard = {
     boss: BOSS,
     fusion: false,
     target: NONE,
-    value: 20,
+    value: 25,
     skill2: {
-      boss: BOSS,
-      value: 5
+      boss: NONE,
+      value: 0
     }
   }
 }
 const initialCardLeft = Object.assign({}, initialCard,{
+  atk: 322,
   skill: {
     type: ATTACK,
     boss: NORMAL,
     fusion: false,
     target: NONE,
-    value: 15,
+    value: 18,
     skill2: {
       boss: NONE,
       value: 0
@@ -136,12 +137,13 @@ const initialCardLeft = Object.assign({}, initialCard,{
   }
 })
 const initialCardRight = Object.assign({}, initialCard,{
+  atk: 327,
   skill: {
     type: BOOST,
     boss: NORMAL,
     fusion: false,
     target: ATR,
-    value: 10,
+    value: 22,
     skill2: {
       boss: NONE,
       value: 0

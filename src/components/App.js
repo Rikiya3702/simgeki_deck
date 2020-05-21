@@ -108,16 +108,17 @@ class App extends Component {
   <div id="App">
   <Container maxWidth="xl">
     <header>
-      <Grid container justify="center" spacing={1}>
-        <Grid item xs={12}>
-          <h1>オンゲキ デッキ シミュレーター</h1>
+      <Grid container justify="center" spacing={3}>
+        <Grid item>
+          <Typography variant="h3" gutterBottom component="h2">
+            オンゲキ デッキ シミュレーター
+          </Typography>
+
         </Grid>
-        <hr />
       </Grid>
     </header>
 
-    <Grid container alignItems="center" spacing={1}>
-      <Grid item xs></Grid>
+    <Grid container alignItems="center" justify="center" spacing={1}>
       <Grid item xs={12} sm={10} >
         <Card>
           <CardHeader title="カード テンプレート" className="back-head"/>
@@ -174,7 +175,6 @@ class App extends Component {
 
         </Card>
       </Grid>
-      <Grid item xs></Grid>
     </Grid>
     <hr />
 
@@ -230,9 +230,8 @@ class App extends Component {
     </Grid>
     <hr />
 
-    <Grid container alignItems="center" spacing={1}>
-      <Grid item xs></Grid>
-      <Grid item xs={12} sm={10} >
+    <Grid container alignItems="center" justify="center" spacing={1}>
+      <Grid item xs={12} md={8} lg={5}>
         <Card>
           <CardHeader title="ボス情報" className="back-head" />
           <CardContent className={`back-${props.boss.attr}`}>
@@ -255,28 +254,18 @@ class App extends Component {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs></Grid>
-    </Grid>
-    <hr />
-
-    <Grid container alignItems="center" spacing={1}>
-      <Grid item xs></Grid>
-      <Grid item xs={12} sm={10} md={8}>
+      <Grid item xs={12} md={8} lg={6}>
         <CardsTable cards={props.cards} atk={props.atk}
           atksL={getAtk('left', props.cards, props.bosstime, props.boss.attr)}
           atksC={getAtk('center', props.cards, props.bosstime, props.boss.attr)}
           atksR={getAtk('right', props.cards, props.bosstime, props.boss.attr)}
            />
        </Grid>
-     <Grid item xs></Grid>
    </Grid>
-   <h3>デッキの総攻撃力</h3><h1>[{Math.ceil(props.atk.left + props.atk.center + props.atk.right)}]</h1>
-   <Grid container alignItems="center" spacing={1}>
-     <Grid item xs></Grid>
+   <Grid container alignItems="center" justify="center" spacing={1}>
      <Grid item xs={12} sm={10} md={8}>
        <BossTable atk={props.atk} />
       </Grid>
-      <Grid item xs></Grid>
     </Grid>
     </Container>
   </div>
@@ -372,14 +361,21 @@ function CustomCard(props) {
     <Card className={classes.root}>
       <CardHeader title={`${props.position.toUpperCase()}`} className="back-head" />
       <CardContent className={`back-${props.card.attr}`}>
-        <Typography variant="body1" component="p">
+        <Typography variant="body1" component="p" gutterBottom>
           【{props.card.attr}】 {props.card.name}
         </Typography>
-        <Typography variant="body2" component="p">
-          {skillName(props.card)}
-          <br />
-          {skillInfo(props.card)}
-        </Typography>
+        <Grid container spacing={1}>
+          <Grid item>
+            <SkillIcon type={props.card.skill.type} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" component="p">
+              {skillName(props.card)}
+              <br />
+              {skillInfo(props.card)}
+            </Typography>
+          </Grid>
+        </Grid>
         <hr />
 
         <Grid container alignItems="center">
@@ -472,22 +468,17 @@ const CardData = props => {
               <Typography variant="h6" gutterBottom>
                 【{props.card.name}】
               </Typography>
-            </Grid>
-            <Grid item xs>
               <Typography variant="body2" component="p">
-                <br />
                 攻撃力：{ props.card.atk }
-                <br />
-                スキル：{ props.card.skill.type }
               </Typography>
             </Grid>
           </Grid>
-          <Typography variant="body2" component="p">
+          <Typography variant="subtitle1" component="p" gutterBottom>
             { skillName(props.card) }
           </Typography>
 
           <Grid container spacing={2} alignItems="left">
-            <Grid item xs={2}>
+            <Grid item >
               <SkillIcon type={props.card.skill.type} />
             </Grid>
             <Grid item xs>
@@ -611,7 +602,7 @@ const helpBosstime = () => {
   )
 }
 
-const SkillIcon = (props) => {
+export const SkillIcon = (props) => {
   return(
     <React.Fragment>
       { props.type === ATTACK &&
