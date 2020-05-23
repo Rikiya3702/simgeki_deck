@@ -71,6 +71,7 @@ import {
 import card_templete from '../data/cards_data.js'
 import select_chars from '../data/select_chars.js'
 
+
 class App extends Component {
 
   constructor(props){
@@ -91,17 +92,6 @@ class App extends Component {
 
   render(){
     const props = this.props
-    const attrs = [
-      { label: FIRE,
-        value: FIRE
-      },
-      { label: AQUA,
-        value: AQUA
-      },
-      { label: LEAF,
-        value: LEAF
-      },
-    ]
 
     return (
 <React.Fragment>
@@ -232,27 +222,17 @@ class App extends Component {
 
     <Grid container alignItems="center" justify="center" spacing={1}>
       <Grid item xs={12} md={8} lg={5}>
-        <Card>
-          <CardHeader title="ボス情報" className="back-head" />
-          <CardContent className={`back-${props.boss.attr}`}>
-            <SelectBossAttr label="属性" class="bossattr" items={attrs} value={props.boss.attr} handleChange={props.input_boss_attr} />
-
-            <Helps content={helpTscore}/>
-            <Helps content={helpBosstime}/>
-
-            <BossSlider label="テクニカルスコア" class="tscore" marks="tscore" step={100} min={940000} max={1010000} value={props.tscore} handleChange={props.input_tscore}/>
-            <BossSlider label="ボスレベル" class="bosslv" marks="lv" step={1} min={1} max={70} value={props.boss.lv} handleChange={props.input_boss_lv}/>
-            <BossSlider label="ボス出現タイミング" class="bossenter" marks="boss" step={1} min={0} max={100} value={props.bosstime.enter} handleChange={props.boss_enter}/>
-            <BossSlider label="ボス撃破タイミング" class="bossdone" marks="boss" step={1} min={0} max={100} value={props.bosstime.done} handleChange={props.boss_done}/>
-            <h3>
-              OverDamage:{getOd(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore)}%
-            </h3>
-            <h3>
-              倒れたオンネコ:{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).count}体
-              と{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).par}%
-            </h3>
-          </CardContent>
-        </Card>
+        <BossCard
+          atk={props.atk}
+          boss={props.boss}
+          tscore={props.tscore}
+          bosstime={props.bosstime}
+          bossAttr={props.input_boss_attr}
+          bossLv={props.input_boss_lv}
+          bossEnter={props.input_boss_enter}
+          bossDone={props.input_boss_done}
+          inputTscore={props.input_tscore}
+          />
       </Grid>
       <Grid item xs={12} md={8} lg={6}>
         <CardsTable cards={props.cards} atk={props.atk}
@@ -452,6 +432,83 @@ function CustomCard(props) {
         </Collapse>
       </CardContent>
     </Card>
+  );
+}
+function BossCard(props) {
+  const useStyles = makeStyles({
+    root: {
+      minWidth: 275,
+    },
+    title: {
+      fontSize: 16,
+    },
+    pos: {
+      marginBottom: 12,
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: '0.5s',
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
+  });
+  const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const attrs = [
+    { label: FIRE,
+      value: FIRE
+    },
+    { label: AQUA,
+      value: AQUA
+    },
+    { label: LEAF,
+      value: LEAF
+    },
+  ]
+
+  return (
+    <Card className={classes.root}>
+      <CardHeader title="ボス情報" className="back-head" />
+        <CardContent className={`back-${props.boss.attr}`}>
+
+          <SelectBossAttr label="属性" class="bossattr" items={attrs} value={props.boss.attr} handleChange={props.bossAttr} />
+
+          <BossSlider label="テクニカルスコア" class="tscore" marks="tscore" step={100} min={940000} max={1010000} value={props.tscore} handleChange={props.inputTscore}/>
+          <BossSlider label="ボスレベル" class="bosslv" marks="lv" step={1} min={1} max={70} value={props.boss.lv} handleChange={props.bossLv}/>
+          <BossSlider label="ボス出現タイミング" class="bossenter" marks="boss" step={1} min={0} max={100} value={props.bosstime.enter} handleChange={props.bossEnter}/>
+          <BossSlider label="ボス撃破タイミング" class="bossdone" marks="boss" step={1} min={0} max={100} value={props.bosstime.done} handleChange={props.bossDone}/>
+          <h3>
+            OverDamage:{getOd(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore)}%
+          </h3>
+          <h3>
+            倒れたオンネコ:{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).count}体
+            と{getOn(props.atk.left + props.atk.center + props.atk.right, props.boss.lv, props.tscore).par}%
+          </h3>
+
+          <IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: expanded,
+            })}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Helps content={helpTscore}/>
+              <Helps content={helpBosstime}/>
+            </CardContent>
+          </Collapse>
+        </CardContent>
+      </Card>
   );
 }
 
