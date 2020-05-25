@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { withStyles, makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -7,26 +7,34 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
-import { skillName, atk2Bp } from './App.js'
+import { skillName, atk2Bp, SkillIcon } from './App.js'
 
 const useStyles = makeStyles({
   table: {
     minWidth: 350,
+    maxWidth: 750,
   },
 })
+
+const StyledTableCell = withStyles(() => ({
+  head: {
+    backgroundColor: 'rgba(100, 100, 100, 0.9)',
+    color: '#fff'
+  }
+}))(TableCell);
 
 export function CardsTable(props) {
   const classes = useStyles()
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
+    <TableContainer className={classes.table} component={Paper}>
+      <Table aria-label="simple table">
+        <TableHead >
           <TableRow>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right">LEFT</TableCell>
-            <TableCell align="right">CENTER</TableCell>
-            <TableCell align="right">RIGHT</TableCell>
+            <StyledTableCell align="right"></StyledTableCell>
+            <StyledTableCell align="right">LEFT</StyledTableCell>
+            <StyledTableCell align="right">CENTER</StyledTableCell>
+            <StyledTableCell align="right">RIGHT</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -44,9 +52,9 @@ export function CardsTable(props) {
           </TableRow>
           <TableRow>
             <TableCell align="right">スキル</TableCell>
-            <TableCell align="right">{props.cards.left.skill.type}</TableCell>
-            <TableCell align="right">{props.cards.center.skill.type}</TableCell>
-            <TableCell align="right">{props.cards.right.skill.type}</TableCell>
+            <TableCell align="right"><SkillIcon type={props.cards.left.skill.type} /></TableCell>
+            <TableCell align="right"><SkillIcon type={props.cards.center.skill.type} /></TableCell>
+            <TableCell align="right"><SkillIcon type={props.cards.right.skill.type} /></TableCell>
           </TableRow>
           <TableRow>
             <TableCell align="right">スキル効果</TableCell>
@@ -90,6 +98,12 @@ export function CardsTable(props) {
             <TableCell align="right">{props.atksC.atk}</TableCell>
             <TableCell align="right">{props.atksR.atk}</TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell align="right">デッキ総合攻撃力</TableCell>
+            <TableCell align="right">{}</TableCell>
+            <TableCell align="right">{}</TableCell>
+            <TableCell align="right">{props.atksL.atk + props.atksC.atk + props.atksR.atk}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
@@ -100,14 +114,17 @@ export function BossTable(props) {
   const classes = useStyles()
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+    <TableContainer className={classes.table} component={Paper}>
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="right">Boos Lv.</TableCell>
-            <TableCell align="right" className={classes.tc} >EXPERT</TableCell>
-            <TableCell align="right" className={classes.tc} >MASTER</TableCell>
-            <TableCell align="right" className={classes.tc} >LUNATIC</TableCell>
+            <StyledTableCell align="left" colSpan={4}>BP予想</StyledTableCell>
+          </TableRow>
+          <TableRow>
+            <StyledTableCell align="right">ボスレベル</StyledTableCell>
+            <StyledTableCell align="right" className={classes.tc}>EXPERT</StyledTableCell>
+            <StyledTableCell align="right" className={classes.tc}>MASTER</StyledTableCell>
+            <StyledTableCell align="right" className={classes.tc}>LUNATIC</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>

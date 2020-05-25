@@ -5,7 +5,7 @@ import Slider from '@material-ui/core/Slider'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 300,
+    width: 400,
   },
   margin: {
     height: theme.spacing(3),
@@ -25,20 +25,32 @@ const marks = {
     }
   ],
   lv: [
-    { value: 0,
-      label: '0'
+    { value: 1,
+      label: '1'
     },
     { value: 10,
       label: '10'
     },
+    { value: 20,
+      label: '20'
+    },
+    { value: 30,
+      label: '30'
+    },
     { value: 50,
       label: '50'
+    },
+    { value: 60,
+      label: '60'
     },
     { value: 70,
       label: '70'
     }
   ],
   tscore: [
+    { value: 940000,
+      label: 'AAA'
+    },
     { value: 970000,
       label: 'S'
     },
@@ -50,9 +62,6 @@ const marks = {
     },
     { value: 1007500,
       label: 'SSS+'
-    },
-    { value: 1010000,
-      label: 'AB+'
     }
   ]
 }
@@ -67,9 +76,7 @@ export default function BossSlider(props) {
     if(newValue !== props.value) {
       props.handleChange(newValue)
     }
-
   }
-
   return (
     <div className={classes.root}>
       <Typography id={`${props.class}-slider`} gutterBottom>
